@@ -44,13 +44,19 @@ def signup(request):
 
 def login(request):
     if request.method == "POST":
-        username = request.POST['username']
-        verify = UsersCustomer.objects.get(username = username)
-        password = request.POST['password']
-        print(verify.username)
-        decrypted = decrypt(verify.password)
-        if(decrypted == password):
-            return render(request, 'location.html')
+        username = request.POST['username'] 
+        try:
+            verify = UsersCustomer.objects.get(username = username)
+            password = request.POST['password']
+            print(verify.username)
+            decrypted = decrypt(verify.password)
+            if(decrypted == password):
+                request.session['name'] = verify.name
+                request.session['username'] = verify.username
+                return save_location(request)
+        except:
+            return HttpResponse("Either the user does not exists or the password is wrong")
+
         # if (verify == username):
         #     print(username)
         return HttpResponse("done")
@@ -115,4 +121,8 @@ def save_location(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return render(request,"location.html")
+
+
+def BookMechanic(request):
+    pass
     

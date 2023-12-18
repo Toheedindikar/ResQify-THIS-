@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 DIRS = ['Templates']
 # Application definition
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
