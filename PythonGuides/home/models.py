@@ -15,3 +15,18 @@ class UsersCustomer(models.Model):
     password = models.CharField(max_length=50)
     class Meta:
         db_table="UsersCustomer"
+
+
+class BookMechanic(models.Model):
+    issueid = models.CharField(max_length=10)
+    address = models.CharField(max_length=500)
+    zipcode = models.CharField(max_length=100)
+    vehicleType = models.CharField(max_length=100)
+    vehicleNo = models.CharField(max_length=10)
+    issuedesc = models.CharField(max_length=500)
+    phone = models.CharField(max_length=50)
+    lat = models.CharField(max_length=200,blank=True, null=True)
+    lng = models.CharField(max_length=200,blank=True, null=True)
+    class Meta:
+        db_table="BookMechanic"
+

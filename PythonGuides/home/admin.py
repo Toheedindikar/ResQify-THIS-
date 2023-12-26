@@ -3,3 +3,4 @@ from .models import *
 
 admin.site.register(EmpLogin)
 admin.site.register(UsersCustomer)
+admin.site.register(BookMechanic)

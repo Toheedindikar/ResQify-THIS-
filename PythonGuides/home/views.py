@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from. models import *
 from home.encrypt_util import *
+import googlemaps
+
+def navbar(request):
+    return render(request, 'navbar.html')
+
 
 def register(request):
     if request.method == 'POST':
@@ -32,14 +37,17 @@ def signup(request):
         print(name)
         if (password1 == password2):
             encryptpass= encrypt(password1)
-            data = UsersCustomer(name=name,username=username,email=email,mobile=phone,password= encryptpass)
-            data.save()
-            print('data saved')
-            return render(request, 'location.html')
+            if UsersCustomer.objects.filter(username =username).exists():
+                
+                return HttpResponse('User already exits')
+            else:
+                data = UsersCustomer(name=name,username=username,email=email,mobile=phone,password= encryptpass)
+                data.save()
+                return render(request, 'login_final.html')
+            
         else:
             return render(request, 'login_final.html')
-        
-    
+  
     return render(request, 'login_final.html')
 
 def login(request):
@@ -124,5 +132,21 @@ def save_location(request):
 
 
 def BookMechanic(request):
-    pass
+    if request.method == 'POST':
+        Address = request.POST['Address']
+        City = request.POST['City']
+        ZipCode = request.POST['ZipCode']
+        print(Address)
+        adress_string = str(Address)+", "+str(ZipCode)+", "+str(City)+", "+"India"
+
+        gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
+        result = gmaps.geocode(adress_string)[0]    
+        lat = result.get('geometry', {}).get('location', {}).get('lat', None)
+        lng = result.get('geometry', {}).get('location', {}).get('lng', None)
+        print(lat)
+        print(lng)
+        return HttpResponse("success")
+
+
+    
     

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
     <!-- font awesome cdn and copy the 1st link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -32,12 +32,10 @@
         </aside>
        </article>
        <article id="right">
-        <a href="login_final.html" style="text-decoration: none; color: blanchedalmond;"><aside class="login_block">
-            login
-        </aside></a>
-        <a href="login_final.html" style="text-decoration: none; color: blanchedalmond;">  <aside class="signup_block">
+        <button style="text-decoration: none; color: blanchedalmond;"> <aside class="login_block">login</aside></button>
+        <button style="text-decoration: none; color: blanchedalmond;">  <aside class="signup_block">
             sign up
-         </aside></a>
+         </aside></button>
       
        </article>
     </nav>
@@ -49,7 +47,7 @@
     </section>
     <section id="users">
         <aside id="mech">
-            <div id="mechanic"><b>Mechanic</b>
+            <div id="mechanic"><button>Mechanic</button>
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
         </aside>
