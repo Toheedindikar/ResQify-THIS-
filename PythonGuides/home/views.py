@@ -1,10 +1,41 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from requests import session
 from. models import *
 from home.encrypt_util import *
 import googlemaps
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def navbar(request):
+    if request.method == 'POST':
+        username = (request.session['username'])
+        print(username)
+        udata = UsersCurrentAddress.objects.get(username = username)
+        key = settings.GOOGLE_API_KEY
+            # eligable_locations = Locations.objects.filter(place_id__isnull=False)
+        locations = []
+        latitude = udata.lat
+        longitude = udata.lng
+        for a in range(0,1): 
+            data = {
+                    "lat":float(latitude), 
+                    "lng": float(longitude), 
+                    "name":'',
+                    
+                }
+
+            locations.append(data)
+
+        print(locations)
+        context = {
+            "key": key, 
+           "locations": locations
+            }
+            
+        return render(request, 'customer_map.html', context)
+
     return render(request, 'navbar.html')
 
 
@@ -57,11 +88,20 @@ def login(request):
             verify = UsersCustomer.objects.get(username = username)
             password = request.POST['password']
             print(verify.username)
+            # verify.email = "newmail.com"
+            # verify.save()
             decrypted = decrypt(verify.password)
             if(decrypted == password):
                 request.session['name'] = verify.name
                 request.session['username'] = verify.username
-                return save_location(request)
+                # def save_location(request):
+                #     data = json.loads(request.body)
+                #     latitude = data.get('latitude')
+                #     print("here")
+                #     longitude = data.get('longitude')
+                #     print(latitude)
+                #     print(longitude)
+                return loc(request)
         except:
             return HttpResponse("Either the user does not exists or the password is wrong")
 
@@ -76,10 +116,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt  # This is used to exempt the view from CSRF protection. Use it cautiously.
 def save_location(request):
-    variable = request.COOKIES.get("myVariable")
-    long = request.COOKIES.get("long")
-    print(variable)
-    print(long)
+    # variable = request.COOKIES.get("lat")
+    # long = request.COOKIES.get("long")
+    # print(variable)
+    # print(long)
     if request.method == 'POST':
         try:
             # data = request.POST  # Use request.POST to access form data
@@ -91,36 +131,53 @@ def save_location(request):
             # Example: Save to a model
             # location = UserLocation(latitude=latitude, longitude=longitude)
             # location.save()
-            lat = request.COOKIES.get("myVariable")
+            data = json.loads(request.body)
+            latitude = data.get('latitude')
+            longitude = data.get('longitude')
+            lat = request.COOKIES.get("lat")
             long = request.COOKIES.get("long")
-            print(lat)
-            print(long)
-            l = lat.split(',')
-            lat= l[0]
-            print(lat)
-            print(long)
-           
+            print(latitude)
+            print(longitude)
+            print("post req ")
+            username = (request.session['username'])
+            print(username)
+            idata = UsersCurrentAddress(username=username,lat = latitude,lng = longitude)
+            idata.save()
+            if UsersCustomer.objects.filter(username =username).exists():
+                udata = UsersCurrentAddress.objects.get(username = username)
+                udata.lat = latitude
+                udata.lng = longitude
+            else:
+                data = UsersCurrentAddress(username=username,lat = latitude,lng = longitude)
+                data.save()
 
+            
+            # l = lat.split(',')
+            # lat= l[0]
+            # print(lat)
+            # print(long)
+           
+            
             key = settings.GOOGLE_API_KEY
             # eligable_locations = Locations.objects.filter(place_id__isnull=False)
             locations = []
 
             for a in range(0,1): 
                 data = {
-                    "lat":float(lat), 
-                    "lng": float(long), 
+                    "lat":float(latitude), 
+                    "lng": float(longitude), 
                     "name":'',
                     
                 }
 
                 locations.append(data)
 
-
+            print(locations)
             context = {
                 "key": key, 
                 "locations": locations
             }
-
+            
             return render(request, 'customer_map.html', context)
 
 
@@ -147,6 +204,8 @@ def BookMechanic(request):
         print(lng)
         return HttpResponse("success")
 
+def loc(request):
+    return render(request,"location.html") 
 
     
     

@@ -3,23 +3,32 @@
 <body>
 <h1>HTML Geolocation</h1>
 <p>Click the button to get your coordinates.</p>
-<form method="POST">
+<!-- <form method="POST" action="{% url 'save_location' %}">
   {% csrf_token %}
     <button onclick="getLocation()">Try It</button>
-</form>
+</form> -->
+
+<p>Click the button to get your coordinates.</p>
+<button onclick="getLocation()">Try It</button>
+<p id="demo"></p>
 <!-- <button onclick="getLocation()">Try It</button> -->
 
-
+<form method="POST" action="{% url 'navbar' %}">
+  {% csrf_token %}
+    <button >Try It</button>
+</form>
 
 
 
 <p id="demo"></p>
 
-<script>
+<!-- <script>
     const x = document.getElementById("demo");
     
     function getLocation() {
       if (navigator.geolocation) {
+        x.innerHTML = "Latitude: " + position.coords.latitude +
+      "<br>Longitude: " + position.coords.longitude;
         navigator.geolocation.getCurrentPosition(showPosition);
       } else {
         x.innerHTML = "Geolocation is not supported by this browser.";
@@ -31,10 +40,57 @@
       "<br>Longitude: " + position.coords.longitude;
       var lat = position.coords.latitude ;
       var long = position.coords.longitude ;
-      document.cookie = "myVariable=" + encodeURIComponent(lat);
+      document.cookie = "lat=" + encodeURIComponent(lat);
       document.cookie = "long=" + encodeURIComponent(long);
     }
-    </script>
+    </script> -->
+    <script>
+      const x = document.getElementById("demo");
+
+      function getLocation() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+              x.innerHTML = "Geolocation is not supported by this browser.";
+          }
+      }
+
+      function showPosition(position) {
+          x.innerHTML = "Latitude: " + position.coords.latitude +
+              "<br>Longitude: " + position.coords.longitude;
+
+          // Send data to Django backend
+          fetch('http://127.0.0.1:8000/save_location', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCookie('csrftoken')
+              },
+              body: JSON.stringify({
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude
+              })
+          })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error('Error:', error));
+      }
+
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+  </script>
 
 
 </body>

@@ -30,3 +30,9 @@ class BookMechanic(models.Model):
     class Meta:
         db_table="BookMechanic"
 
+class UsersCurrentAddress(models.Model):
+    lat = models.CharField(max_length=200,blank=True, null=True)
+    lng = models.CharField(max_length=200,blank=True, null=True)
+    username = models.CharField(max_length=100)
+    class Meta:
+        db_table="UsersCurrentAddress"
