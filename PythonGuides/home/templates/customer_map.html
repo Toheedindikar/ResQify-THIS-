@@ -8,7 +8,7 @@
 
     function initMap(){
 
-        var locations = {{ locations|safe}};
+        var locations = {{ locations|safe }};
         var firstLocation = locations[0]
         var infoWindow = []
 
@@ -68,7 +68,9 @@
             <h2>Book a mechanic</h2>
             <div class="mb-3">
                 <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" name="Address" placeholder="Enter your address" required>
+               
+                <input type="text box" class="form-control" id="editableInput" value="{{ address|safe }}" oninput="updateEditableText(value)">
+                
             </div>
             <div class="mb-3">
                 <label for="city" class="form-label">City</label>
@@ -78,6 +80,7 @@
                 <label for="city" class="form-label">ZipCode</label>
                 <input type="text" class="form-control" name="ZipCode" placeholder="Enter your ZipCode" required>
             </div>
+            
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
@@ -86,6 +89,12 @@
 
 
 </div>
+<script>
+      function updateEditableText(value) {
+        // You can add additional logic here if needed
 
+        console.log("Current text: " + {{ locations|safe }});
+    }
+</script>
 
 {% endblock %}
