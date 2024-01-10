@@ -1,0 +1,58 @@
+<!-- your_template.html -->
+{% load static %}
+<!-- your_template.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'mech_details.css' %}">
+</head>
+<body>
+
+<div class="form-container" action="{% url 'mech_details' %}">
+    <h2>Mechanic Details</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.mech_Address.id_for_label }}">Address:</label>
+            {{ form.mech_Address }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.mech_city.id_for_label }}">City:</label>
+            {{ form.mech_city }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.mech_zipcode.id_for_label }}">Postal Code:</label>
+            {{ form.mech_zipcode }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.mech_shop.id_for_label }}">Shop:</label>
+            {{ form.mech_shop }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username:</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.lat.id_for_label }}">Lat:</label>
+            {{ form.lat }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.lng.id_for_label }}">Lng:</label>
+            {{ form.lng }}
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+</body>
+</html>
