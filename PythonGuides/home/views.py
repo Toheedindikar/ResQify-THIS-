@@ -97,19 +97,10 @@ def login(request):
             verify = UsersCustomer.objects.get(username = username)
             password = request.POST['password']
             print(verify.username)
-            # verify.email = "newmail.com"
-            # verify.save()
             decrypted = decrypt(verify.password)
             if(decrypted == password):
                 request.session['name'] = verify.name
                 request.session['username'] = verify.username
-                # def save_location(request):
-                #     data = json.loads(request.body)
-                #     latitude = data.get('latitude')
-                #     print("here")
-                #     longitude = data.get('longitude')
-                #     print(latitude)
-                #     print(longitude)
                 return loc(request)
         except:
             return HttpResponse("Either the user does not exists or the password is wrong")

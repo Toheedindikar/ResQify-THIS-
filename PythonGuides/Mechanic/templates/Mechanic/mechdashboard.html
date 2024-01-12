@@ -44,7 +44,7 @@
     window.initMap = initMap
 
 </script> -->
-<script>
+<!-- <script>
   let map
 
 function initMap(){
@@ -62,7 +62,7 @@ function initMap(){
             position: {lat: location.lat, lng: location.lng}, 
             map: map, 
             title: location.name,
-            icon: getPinColor(location.color)  // Use color property for pin color
+            icon: getPinColor(location.color)  
         });
 
         var infowindow = new google.maps.InfoWindow({
@@ -96,9 +96,179 @@ function getPinColor(color) {
     }
 }
 
-window.initMap = initMap;
-</script>
+function updateMapData() {
+    
+    fetch('')  
+        .then(response => response.json())
+        .then(data => {
+            
+            locations = data;
 
+            // Remove existing markers
+            infoWindow.forEach(iw => iw.close());
+            infoWindow = [];
+
+            // Add new markers
+            locations.forEach(function(location) {
+                // Your existing marker and info window creation code...
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+window.initMap = initMap;
+</script> -->
+
+<!-- <script>
+  let map;
+  let infoWindow = [];
+  let locations = {{ locations|safe }};
+  
+  function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 37.7749, lng: -122.4194 }, // Set initial center coordinates
+          zoom: 4,
+      });
+  
+      updateMapData();
+  
+      setInterval(updateMapData, 10000);
+  }
+  
+  function updateMapData() {
+      fetch('/getUpdatedLocations/')  // Replace with the actual URL to fetch updated data
+          .then(response => response.json())
+          .then(data => {
+              locations = data;
+  
+              infoWindow.forEach(iw => iw.close());
+              infoWindow = [];
+  
+              locations.forEach(function(location) {
+                  const marker = new google.maps.Marker({
+                      position: { lat: location.lat, lng: location.lng },
+                      map: map,
+                      title: location.name,
+                      icon: getPinColor(location.color),
+                  });
+  
+                  const infowindow = new google.maps.InfoWindow({
+                      content: location.name,
+                  });
+  
+                  infoWindow.push(infowindow);
+  
+                  marker.addListener('click', function() {
+                      infoWindow.forEach(iw => iw.close());
+                      infowindow.open(map, marker);
+                  });
+              });
+          })
+          .catch(error => console.error('Error fetching data:', error));
+  }
+  
+  function getPinColor(color) {
+      switch(color) {
+          case 'red':
+              return 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+          case 'blue':
+              return 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+          case 'green':
+              return 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+          default:
+              return 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+      }
+  }
+  
+  window.initMap = initMap;
+  </script> -->
+  <script>
+    let map;
+    let infoWindow = [];
+    let locations = {{ locations|safe }};
+    
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 37.7749, lng: -122.4194 }, // Set initial center coordinates
+            zoom: 4,
+        });
+    
+        updateMapData();
+    
+        setInterval(updateMapData, 30000);
+        setInterval(updateCardData, 30000);
+    }
+    
+    function updateMapData() {
+        fetch('http://127.0.0.1:8000/mechanic/update_map')  // Replace with the actual URL to fetch updated data
+            .then(response => response.json())
+            .then(data => {
+                locations = data;
+    
+                infoWindow.forEach(iw => iw.close());
+                infoWindow = [];
+    
+                locations.forEach(function(location) {
+                    const marker = new google.maps.Marker({
+                        position: { lat: location.lat, lng: location.lng },
+                        map: map,
+                        title: location.name,
+                        icon: getPinColor(location.color),
+                    });
+    
+                    const infowindow = new google.maps.InfoWindow({
+                        content: location.name,
+                    });
+    
+                    infoWindow.push(infowindow);
+    
+                    marker.addListener('click', function() {
+                        infoWindow.forEach(iw => iw.close());
+                        infowindow.open(map, marker);
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+    
+    function getPinColor(color) {
+        switch(color) {
+            case 'red':
+                return 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+            case 'blue':
+                return 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+            case 'green':
+                return 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+            default:
+                return 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+        }
+    }
+    function updateCardData() {
+        fetch('http://127.0.0.1:8000/mechanic/get_card_data')  // Replace with the actual URL to fetch updated data
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('card-title').textContent = data.title;
+                document.getElementById('card-description').textContent = data.description;
+            })
+            .catch(error => console.error('Error fetching card data:', error));
+    }
+
+    function acceptRequest() {
+        // Logic to handle accepting the request
+        console.log("Request accepted");
+        // You can update the card data or remove the card here
+    }
+
+    function rejectRequest() {
+        // Logic to handle rejecting the request
+        console.log("Request rejected");
+        // You can update the card data or remove the card here
+    }
+    
+    window.initMap = initMap;
+    </script>
+    
+  
 <div class="pageholder">
     <h2>Welcome, {{ request.session.name }}!</h2>
 
@@ -112,6 +282,15 @@ window.initMap = initMap;
             </script>
 
         </div>
+        <div>
+          <div class="card-container" id="dynamic-card" style="background-color: #e3f2fd;">
+              <h2 id="card-title">Request</h2>
+              <p id="card-description">Vehicle Description</p>
+              
+              <button id="acceptButton" type="button" class="btn btn-outline-success" onclick="acceptRequest()">Accept</button>
+              <button id="rejectButton" type="button" class="btn btn-outline-danger" onclick="rejectRequest()">Reject</button>
+          </div>
+      </div>
         
      </div>
 
@@ -127,5 +306,4 @@ window.initMap = initMap;
         console.log("Current text: " + {{ locations|safe }});
     }
 </script>
-
 {% endblock %}
