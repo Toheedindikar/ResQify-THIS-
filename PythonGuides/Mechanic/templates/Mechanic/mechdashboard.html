@@ -195,7 +195,7 @@ window.initMap = initMap;
     
         updateMapData();
     
-        setInterval(updateMapData, 30000);
+        setInterval(updateMapData, 30000000);
         setInterval(updateCardData, 30000);
     }
     
@@ -243,27 +243,124 @@ window.initMap = initMap;
                 return 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
         }
     }
-    function updateCardData() {
-        fetch('http://127.0.0.1:8000/mechanic/get_card_data')  // Replace with the actual URL to fetch updated data
+    fetch('http://127.0.0.1:8000/mechanic/get_vehicle_data')
             .then(response => response.json())
-            .then(data => {
-                document.getElementById('card-title').textContent = data.title;
-                document.getElementById('card-description').textContent = data.description;
+            .then(data => renderCards(data))
+            .catch(error => console.error('Error fetching data:', error));
+
+        function renderCards(data) {
+            const cardContainer = document.getElementById('card-container');
+
+            // Loop through each item in the data
+            data.forEach(item => {
+                // Create a card for each item
+                const card = document.createElement('div');
+                card.className = 'card';
+                let vat = item.username;
+                let url = `/mechanic/display_info/${encodeURIComponent(vat)}`;
+                card.innerHTML = `
+                    <h2>${item.username}</h2>
+                    <p>${item.issue_description}</p>
+                    <p>${item.contact}</p>
+                    <p>${item.distance}</p>
+                    <p>${item.time}</p>
+
+                    <p id="demo"></p>
+                   
+                    
+                    <a href="${url}">View Details</a>
+                    <button type="button" class="btn btn-outline-danger" onclick="rejectRequest()">Reject</button>
+                `;
+
+                // Append the card to the container
+                cardContainer.appendChild(card);
+            });
+        }
+        
+        function getLocation(value) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(value);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+  
+        function showPosition(position) {
+            x.innerHTML = "Latitude: " + position;
+  
+            // Send data to Django backend
+            fetch('http://127.0.0.1:8000/mechanic/process_request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    latitude: position
+                })
             })
-            .catch(error => console.error('Error fetching card data:', error));
-    }
-
-    function acceptRequest() {
-        // Logic to handle accepting the request
-        console.log("Request accepted");
-        // You can update the card data or remove the card here
-    }
-
-    function rejectRequest() {
-        // Logic to handle rejecting the request
-        console.log("Request rejected");
-        // You can update the card data or remove the card here
-    }
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+        
+        function acceptRequest(selectedCard) {
+            // Check if selectedCard is not empty
+            if (!selectedCard) {
+                console.error('Selected card data is empty.');
+                return;
+            }
+        
+            // Logic to handle accepting the request
+            console.log('Request accepted:', selectedCard);
+        
+            // Pass data to the backend and redirect to another page
+            passDataToBackend(selectedCard);
+        }
+        
+        // Function to pass data to the backend
+        function passDataToBackend(selectedCard) {
+            // Extract relevant data from the selectedCard
+            const requestData = {
+                vehicle_number: selectedCard,
+                
+                // Add other fields as needed
+            };
+        
+            // Send data to the backend using a POST request
+            fetch('http://127.0.0.1:8000/mechanic/process_request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    vehicle_number: selectedCard,
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    
+        function rejectRequest() {
+            const card = button.closest('.card');
+            card.remove();
+        }
     
     window.initMap = initMap;
     </script>
@@ -283,13 +380,16 @@ window.initMap = initMap;
 
         </div>
         <div>
-          <div class="card-container" id="dynamic-card" style="background-color: #e3f2fd;">
+          <!-- <div class="card-container" id="dynamic-card" style="background-color: #e3f2fd;">
               <h2 id="card-title">Request</h2>
               <p id="card-description">Vehicle Description</p>
               
               <button id="acceptButton" type="button" class="btn btn-outline-success" onclick="acceptRequest()">Accept</button>
               <button id="rejectButton" type="button" class="btn btn-outline-danger" onclick="rejectRequest()">Reject</button>
-          </div>
+          </div> -->
+          <div id="card-container" style="background-color: #e3f2fd;">
+            <!-- Dynamic cards will be added here -->
+        </div>
       </div>
         
      </div>

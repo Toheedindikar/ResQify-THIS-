@@ -4,6 +4,8 @@ from .encrypt_util import *
 from .forms import *
 from home.models import * 
 import googlemaps
+import json
+from datetime import datetime
 
 # Create your views here.
 def signup_mech(request):
@@ -54,50 +56,15 @@ def mech_login(request):
         try:
             verify = UsersMechanic.objects.get(username = username)
             password = request.POST['password']
-            print(verify.username)
+            
             decrypted = decrypt(verify.password)
             if(decrypted == password):
                 request.session['name'] = verify.name
                 request.session['username'] = verify.username
-                print(decrypted)
-            locations=[]
-            key = settings.GOOGLE_API_KEY
-            print(key)
-            mech_addr = MechanicDetails.objects.get(username = username)
-            print(mech_addr)
-            udata = UsersCurrentAddress.objects.all()
-            print("break")
-            adress_string = str(mech_addr.mech_shop)+", "+str(mech_addr.mech_Address)+", "+str(mech_addr.mech_zipcode)+", "+str(mech_addr.mech_city)+", "+"India"
-            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
-            result = gmaps.geocode(adress_string)[0]    
-            lat = result.get('geometry', {}).get('location', {}).get('lat', None)
-            lng = result.get('geometry', {}).get('location', {}).get('lng', None)
-            data = {
-                        "lat":float(lat), 
-                        "lng": float(lng), 
-                        "color":'red',  
-                    }
-            locations.append(data)
-            
-            for i in udata:  
-                print(i.lat)
-                data = {
-                        "lat":float(i.lat), 
-                        "lng": float(i.lng), 
-                        "color":'blue',  
-                    }
-
-                locations.append(data)
-
-                print(locations)
-            
-            context = {
-                "key": key, 
-            "locations": locations,
-                
-                
-                } 
-            return render(request,'Mechanic/mechdashboard.html',context=context)
+                return redirect('mech_dashboard')
+            else:
+                return HttpResponse('user not found or the password is wrong')
+           
         except Exception as e:
             print(f"Exception: {e}")
             return HttpResponse("An error occurred during login.")
@@ -154,3 +121,123 @@ def get_card_data(request):
     }
     data.append(card_data)
     return JsonResponse(card_data, safe=False)
+
+
+def get_vehicle_data(request):
+    username = request.session['username']
+    mech_address = MechanicDetails.objects.get(username = username)
+
+    from_adress_string = str(mech_address.mech_shop)+", "+str(mech_address.mech_Address)+", "+str(mech_address.mech_city)+", "+str(mech_address.mech_zipcode)
+    user_address = UsersCurrentAddress.objects.all()
+    now = datetime.now()
+    data = []
+    for address in user_address:
+        # gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        # result = gmaps.reverse_geocode((address.lat, address.lng))
+        # add = result[0]['formatted_address']
+        # # update = UsersCurrentAddress(username = username,lat = address.lat,lng =address.lng,address = add)
+        # # update.save()
+        # gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
+        # calculate = gmaps.distance_matrix(
+        #             from_adress_string,
+        #             add,
+        #             mode = 'driving',
+        #             departure_time = now
+        #     )
+        # duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
+        # duration_minutes = duration_seconds/60
+
+        # distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
+        # distance_kilometers = distance_meters/1000
+        var = {
+                'username': address.username,
+                # 'issue_description': 'the vehicle is not starting',
+                # 'contact': '2343143',
+                # 'distance': distance_kilometers,
+                # 'time':duration_minutes
+            }
+        data.append(var)
+    print(data)
+        
+
+    return JsonResponse(data, safe=False)
+@csrf_exempt
+def next_page(request):
+    # Assuming you want to pass the selected card data to the next page
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        # Process data as needed
+        
+        print('Received data:', data)
+        for i in data:
+            print(i)
+
+    # Your other view logic goes here
+
+    return HttpResponse("Response from Django backend")
+
+def mech_dashboard(request):
+            username = request.session['username']
+            locations=[]
+            key = settings.GOOGLE_API_KEY
+            print(key)
+            mech_addr = MechanicDetails.objects.get(username = username)
+            print(mech_addr)
+            udata = UsersCurrentAddress.objects.all()
+            print("break")
+            adress_string = str(mech_addr.mech_shop)+", "+str(mech_addr.mech_Address)+", "+str(mech_addr.mech_zipcode)+", "+str(mech_addr.mech_city)+", "+"India"
+            gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
+            result = gmaps.geocode(adress_string)[0]    
+            lat = result.get('geometry', {}).get('location', {}).get('lat', None)
+            lng = result.get('geometry', {}).get('location', {}).get('lng', None)
+            data = {
+                        "lat":float(lat), 
+                        "lng": float(lng), 
+                        "color":'red',  
+                    }
+            locations.append(data)
+            
+            for i in udata:  
+                print(i.lat)
+                data = {
+                        "lat":float(i.lat), 
+                        "lng": float(i.lng), 
+                        "color":'blue',  
+                    }
+
+                locations.append(data)
+
+                print(locations)
+            
+            context = {
+                "key": key, 
+            "locations": locations,
+                
+                
+                } 
+            return render(request,'Mechanic/mechdashboard.html',context=context)
+
+def display_info(request,vehicle_number):
+    print(vehicle_number)
+    key = settings.GOOGLE_API_KEY
+    
+    return render(request,'Mechanic/display_test.html',{'card_data':vehicle_number,'key':key})
+    # return HttpResponse("hekk",vehicle_number)
+@csrf_exempt 
+def process_request(request):
+    if request.method == 'POST':
+        # Extract data from the POST request
+        
+        data = json.loads(request.body)
+        latitude = data.get('vehicle_number')
+        
+        print("sdfsdjfnn390-------------")
+        print(latitude)
+        response_data = {
+            'vehicle_number':latitude,
+            # Add other fields as needed
+        }
+
+        return JsonResponse(response_data)
+
+    return JsonResponse({'error': 'Invalid request method'})

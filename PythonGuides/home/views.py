@@ -122,15 +122,7 @@ def save_location(request):
     # print(long)
     if request.method == 'POST':
         try:
-            # data = request.POST  # Use request.POST to access form data
-            # latitude = data.get('lat')
-            # longitude = data.get('long')
-            # print(latitude)
-            # print(longitude)
-            # You can now do something with the latitude and longitude, such as saving it to the database
-            # Example: Save to a model
-            # location = UserLocation(latitude=latitude, longitude=longitude)
-            # location.save()
+        
             data = json.loads(request.body)
             latitude = data.get('latitude')
             longitude = data.get('longitude')
@@ -148,14 +140,7 @@ def save_location(request):
             udata.lng = longitude
             udata.save()
             # if (UsersCustomer.objects.filter(username =username).exists() == True):
-            #     udata = UsersCurrentAddress.objects.get(username = username)
-            #     udata.lat = latitude
-            #     udata.lng = longitude
-            # else:
-            #     print("else called")
-            #     data = UsersCurrentAddress(username=username,lat = latitude,lng = longitude)
-            #     data.save()
-
+      
     
             key = settings.GOOGLE_API_KEY
             # eligable_locations = Locations.objects.filter(place_id__isnull=False)
@@ -208,6 +193,7 @@ def BookMechanic(request):
         if result:
                 # Assuming the first result is the most relevant one
             address = result[0]['formatted_address']
+
             print(f"Address: {address}")
             return HttpResponse(address)
         else:
