@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from requests import session
 from. models import *
@@ -23,6 +23,8 @@ def navbar(request):
             gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
             result = gmaps.reverse_geocode((latitude, longitude))
             address = result[0]['formatted_address']
+            udata.address= address
+            udata.save()
             print(result)
         for a in range(0,1): 
             data = {
@@ -37,8 +39,7 @@ def navbar(request):
         context = {
             "key": key, 
            "locations": locations,
-            "address" : address,
-             
+            "address" : address, 
             }
             
         return render(request, 'customer_map.html', context=context)
@@ -174,34 +175,66 @@ def save_location(request):
 
 def BookMechanic(request):
     if request.method == 'POST':
-        Address = request.POST['Address']
-        City = request.POST['City']
-        ZipCode = request.POST['ZipCode']
-        print(Address)
-        adress_string = str(Address)+", "+str(ZipCode)+", "+str(City)+", "+"India"
 
-        gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
-        result = gmaps.geocode(adress_string)[0]    
-        lat = result.get('geometry', {}).get('location', {}).get('lat', None)
-        lng = result.get('geometry', {}).get('location', {}).get('lng', None)
-        # print(lat)
-        # print(lng)
-        # return HttpResponse("success")
-        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
-        result = gmaps.reverse_geocode((lat, lng))
+        return render(request,"issue_detailpage.html") 
+        # Address = request.POST['Address']
+        # City = request.POST['City']
+        # ZipCode = request.POST['ZipCode']
+        # print(Address)
+        # adress_string = str(Address)+", "+str(ZipCode)+", "+str(City)+", "+"India"
 
-        if result:
-                # Assuming the first result is the most relevant one
-            address = result[0]['formatted_address']
+        # gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
+        # result = gmaps.geocode(adress_string)[0]    
+        # lat = result.get('geometry', {}).get('location', {}).get('lat', None)
+        # lng = result.get('geometry', {}).get('location', {}).get('lng', None)
+        # # print(lat)
+        # # print(lng)
+        # # return HttpResponse("success")
+        # gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        # result = gmaps.reverse_geocode((lat, lng))
 
-            print(f"Address: {address}")
-            return HttpResponse(address)
-        else:
-            print("Reverse geocoding API did not return any results.")
-            return HttpResponse("No address found")
+        # if result:
+        #         # Assuming the first result is the most relevant one
+        #     address = result[0]['formatted_address']
+
+        #     print(f"Address: {address}")
+        #     return HttpResponse(address)
+        # else:
+        #     print("Reverse geocoding API did not return any results.")
+        #     return HttpResponse("No address found")
 
 def loc(request):
     return render(request,"location.html") 
 
-    
+import random
+
+# Generate a random integer between a specified range
+
+def vehicle_details(request):
+    if request.method == 'POST':
+        username = request.session['username']
+        vehicleType = request.POST['vehicleType']
+        vehicleNumber = request.POST['vehicleNumber']
+        issueDescription = request.POST['issueDescription']
+        print(vehicleType)
+        mobileNumber = request.POST['mobileNumber']
+        issueId = random.randint(1, 1000)
+        undata = UsersCurrentAddress.objects.get(username = username)
+        try :
+            
+            update = BookMechanic.objects.get(username = username)
+            update.issueid = issueId
+            update.Address = undata.address
+            update.ZipCode = 560060
+            update.vehicleNo = vehicleNumber
+            update.phone = mobileNumber
+
+        except:
+
+
+            udata = UsersCurrentAddress(issueid = '2',Address = undata.address,ZipCode = 560060 ,VehicleType = vehicleType,VehicleNo = vehicleNumber,Issuedesc = issueDescription,Phone = mobileNumber)
+            udata.save()
+        return HttpResponse("data stored")
+
+    return render(request,"issue_detailpage.html") 
     

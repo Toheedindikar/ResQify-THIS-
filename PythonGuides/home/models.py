@@ -18,22 +18,31 @@ class UsersCustomer(models.Model):
 
 
 class BookMechanic(models.Model):
-    issueid = models.CharField(max_length=10)
-    address = models.CharField(max_length=500)
-    zipcode = models.CharField(max_length=100)
-    vehicleType = models.CharField(max_length=100)
-    vehicleNo = models.CharField(max_length=10)
-    issuedesc = models.CharField(max_length=500)
-    phone = models.CharField(max_length=50)
+    issueid = models.CharField(max_length=1000,blank=True, null=True)
+    address = models.CharField(max_length=500,blank=True, null=True)
+    zipcode = models.CharField(max_length=100,blank=True, null=True)
+    vehicleType = models.CharField(max_length=100,blank=True, null=True)
+    vehicleNo = models.CharField(max_length=100,blank=True, null=True)
+    issuedesc = models.CharField(max_length=500,blank=True, null=True)
+    phone = models.CharField(max_length=500,blank=True, null=True)
     lat = models.CharField(max_length=200,blank=True, null=True)
     lng = models.CharField(max_length=200,blank=True, null=True)
     class Meta:
         db_table="BookMechanic"
 
 class UsersCurrentAddress(models.Model):
+    issueid = models.CharField(max_length=1000,blank=True, null=True)
+    address = models.CharField(max_length=500,blank=True, null=True)
+    zipcode = models.CharField(max_length=100,blank=True, null=True)
+    vehicleType = models.CharField(max_length=100,blank=True, null=True)
+    vehicleNo = models.CharField(max_length=100,blank=True, null=True)
+    issuedesc = models.CharField(max_length=500,blank=True, null=True)
+    phone = models.CharField(max_length=500,blank=True, null=True)
     lat = models.CharField(max_length=200,blank=True, null=True)
     lng = models.CharField(max_length=200,blank=True, null=True)
     username = models.CharField(max_length=100)
-    address = models.CharField(max_length=500,blank=True, null=True)
+    
     class Meta:
         db_table="UsersCurrentAddress"
+
+

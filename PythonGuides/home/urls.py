@@ -8,4 +8,5 @@ urlpatterns = [
     path('save_location',save_location,name='save_location'),
     path('BookMechanic',BookMechanic,name='BookMechanic'),
     path('loc',loc,name="loc"), 
+    path('vehicle_details',vehicle_details,name="vehicle_details"), 
 ]
