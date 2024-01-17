@@ -68,20 +68,30 @@
 
             <div class="mb-3">
                 <label for="mobileNumber" class="form-label">Mobile Number:</label>
-                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" placeholder="Enter your mobile number">
+                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" placeholder="Enter your mobile number" oninput="validatePhoneNumber()">
+                <small id="mobileNumberError" class="form-text text-danger"></small>
+                <!-- <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" placeholder="Enter your mobile number"> -->
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" onclick="validatePhoneNumber()" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
 
     <script>
-        function showSecondDropdown() {
-            // Your existing JavaScript function
-        }
+        function validatePhoneNumber() {
+      var mobileNumber = document.getElementById("mobileNumber").value;
+
+      if (mobileNumber.length > 10) {
+        alert("Phone number cannot exceed 10 digits!");
+        return false;
+      }
+
+      return true;
+    }
     </script>
+    
 
 </body>
 </html>

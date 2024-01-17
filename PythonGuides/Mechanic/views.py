@@ -132,31 +132,33 @@ def get_vehicle_data(request):
     now = datetime.now()
     data = []
     for address in user_address:
-        # gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
-        # result = gmaps.reverse_geocode((address.lat, address.lng))
-        # add = result[0]['formatted_address']
-        # # update = UsersCurrentAddress(username = username,lat = address.lat,lng =address.lng,address = add)
-        # # update.save()
-        # gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
-        # calculate = gmaps.distance_matrix(
-        #             from_adress_string,
-        #             add,
-        #             mode = 'driving',
-        #             departure_time = now
-        #     )
-        # duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
-        # duration_minutes = duration_seconds/60
+        gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
+        result = gmaps.reverse_geocode((address.lat, address.lng))
+        add = result[0]['formatted_address']
+        # update = UsersCurrentAddress(username = username,lat = address.lat,lng =address.lng,address = add)
+        # update.save()
+        gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
+        calculate = gmaps.distance_matrix(
+                    from_adress_string,
+                    add,
+                    mode = 'driving',
+                    departure_time = now
+            )
+        duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
+        duration_minutes = duration_seconds/60
 
-        # distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
-        # distance_kilometers = distance_meters/1000
+        distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
+        distance_kilometers = distance_meters/1000
+        
         var = {
                 'username': address.username,
-                # 'issue_description': 'the vehicle is not starting',
-                # 'contact': '2343143',
-                # 'distance': distance_kilometers,
-                # 'time':duration_minutes
+                'issue_description': 'the vehicle is not starting',
+                'contact': '2343143',
+                'distance': distance_kilometers,
+                'time':duration_minutes
             }
         data.append(var)
+        print(var)
     print(data)
         
 
@@ -218,26 +220,30 @@ def mech_dashboard(request):
             return render(request,'Mechanic/mechdashboard.html',context=context)
 
 def display_info(request,vehicle_number):
-    print(vehicle_number)
+    cust_username = vehicle_number
     key = settings.GOOGLE_API_KEY
+    mech_username = request.session['username']
+    mech_address = MechanicDetails.objects.get(username = mech_username)
+
+    from_adress_string = str(mech_address.mech_shop)+", "+str(mech_address.mech_Address)+", "+str(mech_address.mech_city)+", "+str(mech_address.mech_zipcode)
+    add = UsersCurrentAddress.objects.get(username = cust_username)
+    to_address = add.address
+    now = datetime.now()
+    gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
+    calculate = gmaps.distance_matrix(
+                    from_adress_string,
+                    to_address,
+                    mode = 'driving',
+                    departure_time = now
+    )
+    duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
+    duration_minutes = duration_seconds
+
+    distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
+    distance_kilometers = distance_meters/1000
+
+
     
-    return render(request,'Mechanic/display_test.html',{'card_data':vehicle_number,'key':key})
+    return render(request,'Mechanic/display_test.html',{'card_data':cust_username,'key':key,'duration_minutes':duration_minutes,'distance_kilometers':distance_kilometers})
+    # return render(request,"Mechanic/resolved_page.html")
     # return HttpResponse("hekk",vehicle_number)
-@csrf_exempt 
-def process_request(request):
-    if request.method == 'POST':
-        # Extract data from the POST request
-        
-        data = json.loads(request.body)
-        latitude = data.get('vehicle_number')
-        
-        print("sdfsdjfnn390-------------")
-        print(latitude)
-        response_data = {
-            'vehicle_number':latitude,
-            # Add other fields as needed
-        }
-
-        return JsonResponse(response_data)
-
-    return JsonResponse({'error': 'Invalid request method'})

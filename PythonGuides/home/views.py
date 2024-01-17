@@ -213,6 +213,7 @@ import random
 def vehicle_details(request):
     if request.method == 'POST':
         username = request.session['username']
+        print(username)
         vehicleType = request.POST['vehicleType']
         vehicleNumber = request.POST['vehicleNumber']
         issueDescription = request.POST['issueDescription']
@@ -221,19 +222,22 @@ def vehicle_details(request):
         issueId = random.randint(1, 1000)
         undata = UsersCurrentAddress.objects.get(username = username)
         try :
-            
             update = BookMechanic.objects.get(username = username)
             update.issueid = issueId
             update.Address = undata.address
             update.ZipCode = 560060
             update.vehicleNo = vehicleNumber
             update.phone = mobileNumber
-
+            update.save()
         except:
-
-
-            udata = UsersCurrentAddress(issueid = '2',Address = undata.address,ZipCode = 560060 ,VehicleType = vehicleType,VehicleNo = vehicleNumber,Issuedesc = issueDescription,Phone = mobileNumber)
-            udata.save()
+            # udata = UsersCurrentAddress(issueid = '2',Address = undata.address,ZipCode = 560060 ,VehicleType = vehicleType,VehicleNo = vehicleNumber,Issuedesc = issueDescription,Phone = mobileNumber)
+            undata.issueid = issueId
+            undata.phone = mobileNumber
+            undata.issuedesc = issueDescription
+            undata.vehicleNo = vehicleNumber
+            undata.vehicleType = vehicleType
+            print("except called")
+            undata.save()
         return HttpResponse("data stored")
 
     return render(request,"issue_detailpage.html") 

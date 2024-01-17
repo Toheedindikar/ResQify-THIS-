@@ -1,12 +1,54 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'resolved_page.css'%}">
     <body onload="initializeMap()">
-        <div id="map" style="height: 400px;"></div>
+      <br>
+        <section id="map" style="height: 500px;"></section>
         <h2>{{ card_data }}</h2>
+        <div class="container-fluid">
+          <div id="time">
+            Time Required: 
+          </div>
+          <div class="progress mt-2">
+            <div id="loadingBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+          </div>
+          <div id="timer"></div>
+        </div>
+        <form method="post" action="next_page.php">
+          <section>
+              <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                  <div class="container-fluid">
+                    <div id="logo"></div>
+                      <a class="navbar-brand" href="#" style="font-size: 30px; color: aqua;" >ResQify</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                          <ul class="navbar-nav">
+                              <li class="nav-item">
+                                  <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                              </li>
+                              <li class="nav-item">
+                                  <a class="nav-link" href="#">Bookings</a>
+                              </li>
+                              <li class="nav-item">
+                                  <a class="nav-link" href="#">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
+                                          style="margin-left: 10px;"></i></a>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+              </nav>
+          </section>
+          <button type="button" class="submit" onclick="redirectToNextPage()">Issue Resolved</button>
+      
      </body>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{key}}&libraries=places"></script>
@@ -50,9 +92,51 @@
         directionsService.route(request, function (result, status) {
           if (status == 'OK') {
             directionsRenderer.setDirections(result);
+            startLoadingBarAnimation();
           }
         });
       }
-          
+      let timerOn = true;
+
+function timer(remaining) {
+    var m = Math.floor(remaining / 60);
+    var s = remaining % 60;
+
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
+    document.getElementById('timer').innerHTML = m + ':' + s;
+    remaining -= 1;
+
+    if (remaining >= 0 && timerOn) {
+        setTimeout(function () {
+            timer(remaining);
+        }, 1000);
+        return;
+    }
+
+    if (!timerOn) {
+        // Do validate stuff here
+        return;
+    }
+
+    // Do timeout stuff here
+    alert('Timeout for otp');
+}
+
+// Call the timer function with the dynamic duration from Django
+    timer({{ duration_minutes }});
+
+    function startLoadingBarAnimation() {
+      var loadingBar = document.getElementById('loadingBar');
+      var width = 1;
+      var interval = setInterval(function () {
+        if (width >= 100) {
+          clearInterval(interval);
+        } else {
+          width++;
+          loadingBar.style.width = width + '%';
+        }
+      }, 100);
+    }   
 </script>
 </html>

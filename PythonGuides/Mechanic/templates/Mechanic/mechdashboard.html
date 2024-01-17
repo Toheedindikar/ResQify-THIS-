@@ -1,7 +1,97 @@
-{% extends 'base.html' %}
-{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css'%}">
+   <!--  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>-->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <!-- For formatting dates -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>  
+
+    <title> Django Google Maps Tutorial</title>
+    <style>
+        /* Style for the card container */
+        #card-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+    
+        /* Style for individual cards */
+        .card {
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          padding: 10px;
+          margin: 10px;
+          width: 300px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease-in-out;
+        }
+    
+        .card:hover {
+          transform: scale(1.05);
+        }
+    
+        /* Style for the View Details link */
+        .card a {
+          text-decoration: none;
+          color: #007bff;
+          font-weight: bold;
+        }
+    
+        .card a:hover {
+          text-decoration: underline;
+        }
+      </style>
+
+</head>
+
+<body>
+
+<div >
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <div id="logo"></div>
+            <a class="navbar-brand" href="#" style="font-size: 30px; color: aqua;">ResQify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'mech_login' %}">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
+                                style="margin-left: 10px;"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    
+</div>
+
 
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <!-- 
 <script> 
     let map
@@ -259,17 +349,19 @@ window.initMap = initMap;
                 let vat = item.username;
                 let url = `/mechanic/display_info/${encodeURIComponent(vat)}`;
                 card.innerHTML = `
-                    <h2>${item.username}</h2>
-                    <p>${item.issue_description}</p>
-                    <p>${item.contact}</p>
-                    <p>${item.distance}</p>
-                    <p>${item.time}</p>
+                    <h2>Username : ${item.username}</h2>
+                    <p>Issue Description :${item.issue_description}</p>
+                    <p>Contact : ${item.contact}</p>
+                    <p>Distance :${item.distance}</p>
+                    <p>Time to reach :${item.time}</p>
 
                     <p id="demo"></p>
                    
                     
                     <a href="${url}">View Details</a>
-                    <button type="button" class="btn btn-outline-danger" onclick="rejectRequest()">Reject</button>
+                    </br>
+          
+                    
                 `;
 
                 // Append the card to the container
@@ -387,7 +479,7 @@ window.initMap = initMap;
               <button id="acceptButton" type="button" class="btn btn-outline-success" onclick="acceptRequest()">Accept</button>
               <button id="rejectButton" type="button" class="btn btn-outline-danger" onclick="rejectRequest()">Reject</button>
           </div> -->
-          <div id="card-container" style="background-color: #e3f2fd;">
+          <div id="card-container" class="card-container" style="background-color:yellow;">
             <!-- Dynamic cards will be added here -->
         </div>
       </div>
@@ -406,4 +498,6 @@ window.initMap = initMap;
         console.log("Current text: " + {{ locations|safe }});
     }
 </script>
-{% endblock %}
+ 
+</body>
+</html>

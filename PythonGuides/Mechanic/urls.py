@@ -11,6 +11,6 @@ urlpatterns = [
     path('mechanic/next_page',next_page,name='next_page'),
     path('mech_dashboard',mech_dashboard,name='mech_dashboard'),
     path('display_info/<str:vehicle_number>/',display_info,name='display_info'),
-    path('process_request',process_request,name='process_request'),
+    
 ]
 
