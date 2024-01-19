@@ -41,6 +41,7 @@ class UsersCurrentAddress(models.Model):
     lat = models.CharField(max_length=200,blank=True, null=True)
     lng = models.CharField(max_length=200,blank=True, null=True)
     username = models.CharField(max_length=100)
+    issue_status_id = models.CharField(max_length=69,blank=True, null=True)
     
     class Meta:
         db_table="UsersCurrentAddress"

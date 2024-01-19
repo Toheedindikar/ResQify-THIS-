@@ -44,7 +44,7 @@ def navbar(request):
             
         return render(request, 'customer_map.html', context=context)
 
-    return render(request, 'navbar.html')
+    return render(request, 'Home_Page.html')
 
 
 def register(request):

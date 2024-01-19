@@ -1,142 +1,245 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'resolved_page.css'%}">
-    <body onload="initializeMap()">
-      <br>
-        <section id="map" style="height: 500px;"></section>
-        <h2>{{ card_data }}</h2>
-        <div class="container-fluid">
-          <div id="time">
-            Time Required: 
-          </div>
-          <div class="progress mt-2">
-            <div id="loadingBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-          </div>
-          <div id="timer"></div>
-        </div>
-        <form method="post" action="next_page.php">
-          <section>
-              <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-                  <div class="container-fluid">
-                    <div id="logo"></div>
-                      <a class="navbar-brand" href="#" style="font-size: 30px; color: aqua;" >ResQify</a>
-                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                          <span class="navbar-toggler-icon"></span>
-                      </button>
-                      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                          <ul class="navbar-nav">
-                              <li class="nav-item">
-                                  <a class="nav-link active" aria-current="page" href="#">Profile</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="#">Bookings</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="#">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
-                                          style="margin-left: 10px;"></i></a>
-                              </li>
-                          </ul>
-                      </div>
-                  </div>
-              </nav>
-          </section>
-          <button type="button" class="submit" onclick="redirectToNextPage()">Issue Resolved</button>
-      
-     </body>
-
-<script src="https://maps.googleapis.com/maps/api/js?key={{key}}&libraries=places"></script>
-
-<script>
-    var map;
-    var directionsService = new google.maps.DirectionsService();
-    var directionsRenderer = new google.maps.DirectionsRenderer();
-    
-    function initializeMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 16.1823937, lng: 75.6959708 },
-        zoom: 13,
-      });
-    
-      directionsRenderer.setMap(map);
-    
-      // Add markers
-      var marker1 = new google.maps.Marker({
-        position: { lat: 16.1823937, lng: 75.6959708 },
-        map: map,
-        title: 'Marker 1',
-      });
-    
-      var marker2 = new google.maps.Marker({
-        position: { lat: 12.9296625, lng: 77.51854689999999 },
-        map: map,
-        title: 'Marker 2',
-      });
-    
-      // Calculate and display route
-      calculateAndDisplayRoute();
-    }
-    function calculateAndDisplayRoute() {
-        var request = {
-          origin: marker1.getPosition(),
-          destination: marker2.getPosition(),
-          travelMode: 'DRIVING',
-        };
-      
-        directionsService.route(request, function (result, status) {
-          if (status == 'OK') {
-            directionsRenderer.setDirections(result);
-            startLoadingBarAnimation();
-          }
-        });
-      }
-      let timerOn = true;
-
-function timer(remaining) {
-    var m = Math.floor(remaining / 60);
-    var s = remaining % 60;
-
-    m = m < 10 ? '0' + m : m;
-    s = s < 10 ? '0' + s : s;
-    document.getElementById('timer').innerHTML = m + ':' + s;
-    remaining -= 1;
-
-    if (remaining >= 0 && timerOn) {
-        setTimeout(function () {
-            timer(remaining);
-        }, 1000);
-        return;
-    }
-
-    if (!timerOn) {
-        // Do validate stuff here
-        return;
-    }
-
-    // Do timeout stuff here
-    alert('Timeout for otp');
-}
-
-// Call the timer function with the dynamic duration from Django
-    timer({{ duration_minutes }});
-
-    function startLoadingBarAnimation() {
-      var loadingBar = document.getElementById('loadingBar');
-      var width = 1;
-      var interval = setInterval(function () {
-        if (width >= 100) {
-          clearInterval(interval);
-        } else {
-          width++;
-          loadingBar.style.width = width + '%';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            margin: 0;
+            padding: 0;
+            animation: pulse 100s infinite;
+            background-color: #87aaf7;
         }
-      }, 100);
-    }   
-</script>
+
+        #logo {
+            height: 50px;
+            width: 50px;
+            background-image: url(/IMAGES/mech1.jpg);
+            background-size: cover;
+            border-radius: 100px;
+        }
+
+        .navbar-brand {
+            margin-left: 10px;
+        }
+
+        #google-map {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #google-map {
+                margin-top: 10px;
+            }
+
+            .submit {
+                margin: 10px auto;
+                /* Center the button on small screens */
+            }
+        }
+
+        #timer {
+            font-size: 30px;
+        }
+
+        .submit {
+            height: 50px;
+            width: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+            /* Add margin for spacing */
+            background-color: black;
+            color: aliceblue;
+            font-size: 20px;
+            border-radius: 20px;
+        }
+
+        .container {
+            position: relative;
+            width: 50%;
+            margin: 280px auto;
+            padding: 20px 40px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
+        }
+
+        .Loading {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background: #f1f1f1;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .Loading:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 0;
+            height: 100%;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+            animation: load 10s infinite;
+        }
+
+        @keyframes load {
+            0% {
+                width: 0;
+                background: rgb(157, 233, 59);
+            }
+
+            25% {
+                width: 40%;
+                background: #23f52d;
+            }
+
+            50% {
+                width: 60%;
+                background: #e4f82e;
+            }
+
+            75% {
+                width: 75%;
+                background: #fa9c32;
+            }
+
+            100% {
+                width: 100%;
+                background: #e60b0bf1;
+            }
+        }
+
+        @keyframes pulse {
+            /* 0% {
+                background: #a28089;
+            } */
+
+            100% {
+                background: #a0d2eb;
+            }
+
+            /* 50% {
+                background: #ffa8b6;
+            }
+
+            75% {
+                background: #d0bdf4;
+            }
+
+            100% {
+                background: #494d5f;
+            } */
+        }
+    </style>
+</head>
+
+<body>
+  <div id="google-map" style="height: 400px;"></div>
+    <div >
+        <div class="Loading"></div>
+    </div>
+
+    <form method="post" action="next_page.php">
+        <section>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                <div class="container-fluid">
+                    <div id="logo"></div>
+                    <a class="navbar-brand" href="#" style="font-size: 30px; color: aqua;">ResQify</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
+                                        style="margin-left: 10px;"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </section>
+        <form action="post" actin="">
+          <button type="button" class="submit" onclick="redirectToNextPage()">Issue Resolved</button>
+          <button type="button" class="submit" onclick="redirectToNextPage()">Issue Unresolved</button>
+        </form>
+        
+
+        <!-- Map Section -->
+        
+        <script src="https://maps.googleapis.com/maps/api/js?key={{key}}&libraries=places"></script>
+        <script>
+            // Initialize and add the map
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('google-map'), {
+                    center: { lat: 12.920155, lng: 77.499572}, // Default center (San Francisco)
+                    zoom: 12
+                });
+
+                // Marker 1
+                var marker1 = new google.maps.Marker({
+                    position: { lat: 16.1823937, lng: 75.6959708 }, // Example coordinates
+                    map: map,
+                    title: 'Marker 1'
+                });
+
+                // Marker 2
+                var marker2 = new google.maps.Marker({
+                    position: { lat: 12.919891, lng: 77.499721 }, // Example coordinates
+                    map: map,
+                    title: 'Marker 2'
+                });
+
+                // Draw a route between markers
+                var directionsService = new google.maps.DirectionsService();
+                var directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+                calculateAndDisplayRoute(directionsService, directionsRenderer, marker1.getPosition(), marker2.getPosition());
+            }
+
+            function calculateAndDisplayRoute(directionsService, directionsRenderer, origin, destination) {
+                directionsService.route(
+                    {
+                        origin: origin,
+                        destination: destination,
+                        travelMode: 'DRIVING'
+                    },
+                    function (response, status) {
+                        if (status === 'OK') {
+                            directionsRenderer.setDirections(response);
+                        } else {
+                            window.alert('Directions request failed due to ' + status);
+                        }
+                    });
+            }
+
+            // Load the map after the page is fully loaded
+            google.maps.event.addDomListener(window, 'load', initMap);
+        </script>
+    </form>
+</body>
+
 </html>

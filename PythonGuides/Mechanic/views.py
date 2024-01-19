@@ -131,6 +131,7 @@ def get_vehicle_data(request):
     user_address = UsersCurrentAddress.objects.all()
     now = datetime.now()
     data = []
+    i =0 
     for address in user_address:
         gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         result = gmaps.reverse_geocode((address.lat, address.lng))
@@ -159,6 +160,9 @@ def get_vehicle_data(request):
             }
         data.append(var)
         print(var)
+        i += 1 
+        if (i == 5):
+            exit
     print(data)
         
 
