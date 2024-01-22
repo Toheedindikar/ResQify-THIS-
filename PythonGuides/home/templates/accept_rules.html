@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadside Assistance Rules</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
+
+        #rulesBox {
+            width: 400px;
+            padding: 20px;
+            border: 2px solid #ccc;
+            text-align: left;
+            font-size: medium ;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        #acceptCheckbox {
+            margin-top: 10px;
+        }
+
+        .acceptButton {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="rulesBox">
+        <h2>Roadside Assistance Rules and Regulations</h2>
+        <ol>
+            <li>User Consent:
+
+                Users must explicitly consent to providing their current location for roadside assistance.
+                Consent can be obtained through a checkbox on the acceptance form.</li>
+            <li>Eligibility: Roadside Assistance services are typically available to eligible vehicles covered under an insurance policy.</li>
+            <li>Coverage Conditions: The services provided may include towing, flat tire assistance, fuel delivery, and more. The extent of coverage depends on the insurance plan.</li>
+            <li>Service Limitations: Some plans may have limitations on the number of service calls or the distance covered per service.</li>
+            <li>Vehicle Condition: The vehicle should be maintained in accordance with local laws and regulations. Improper use or negligence may affect the availability of services.</li>
+            <li>Compliance: Users are expected to comply with applicable laws and regulations while availing of Roadside Assistance services.</li>
+            <li>Claims Process: In case of an incident, users must adhere to the specific claims process outlined by their insurance provider.</li>
+        </ol>
+
+        <label for="acceptCheckbox">
+            <input type="checkbox" id="acceptCheckbox" onclick="getLocation()">
+            I accept the rules and regulations.
+        </label>
+        
+   
+        
+        <form method="POST" action="{% url 'navbar' %}">
+            {% csrf_token %}
+              <button class="acceptButton" >Accept and Continue</button>
+          </form>
+    </div>
+
+    
+    <!-- <button onclick="getLocation()">Try It</button> -->
+    
+   
+    
+    
+      
+    
+    
+        <script>
+          const x = document.getElementById("demo");
+    
+          function getLocation() {
+              if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(showPosition);
+              } else {
+                  x.innerHTML = "Geolocation is not supported by this browser.";
+              }
+          }
+    
+          function showPosition(position) {
+              x.innerHTML = "Latitude: " + position.coords.latitude +
+                  "<br>Longitude: " + position.coords.longitude;
+    
+              // Send data to Django backend
+              fetch('http://127.0.0.1:8000/save_location', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': getCookie('csrftoken')
+                  },
+                  body: JSON.stringify({
+                      latitude: position.coords.latitude,
+                      longitude: position.coords.longitude
+                  })
+              })
+              .then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.error('Error:', error));
+          }
+    
+          function getCookie(name) {
+              var cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                  var cookies = document.cookie.split(';');
+                  for (var i = 0; i < cookies.length; i++) {
+                      var cookie = cookies[i].trim();
+                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+      </script>
+    
+
+</body>
+</html>

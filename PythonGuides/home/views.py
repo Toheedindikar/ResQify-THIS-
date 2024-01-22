@@ -23,7 +23,9 @@ def navbar(request):
             gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
             result = gmaps.reverse_geocode((latitude, longitude))
             address = result[0]['formatted_address']
+            # zipcode = result[0]['postal_code']
             udata.address= address
+            # udata.zipcode = zipcode
             udata.save()
             print(result)
         for a in range(0,1): 
@@ -44,7 +46,7 @@ def navbar(request):
             
         return render(request, 'customer_map.html', context=context)
 
-    return render(request, 'Home_Page.html')
+    return render(request, 'loading_bar.html')
 
 
 def register(request):
@@ -102,7 +104,7 @@ def login(request):
             if(decrypted == password):
                 request.session['name'] = verify.name
                 request.session['username'] = verify.username
-                return loc(request)
+                return accept_rules(request)
         except:
             return HttpResponse("Either the user does not exists or the password is wrong")
 
@@ -117,10 +119,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt  # This is used to exempt the view from CSRF protection. Use it cautiously.
 def save_location(request):
-    # variable = request.COOKIES.get("lat")
-    # long = request.COOKIES.get("long")
-    # print(variable)
-    # print(long)
+    
     if request.method == 'POST':
         try:
         
@@ -146,7 +145,7 @@ def save_location(request):
             key = settings.GOOGLE_API_KEY
             # eligable_locations = Locations.objects.filter(place_id__isnull=False)
             locations = []
-
+            print("Called from login")
             for a in range(0,1): 
                 data = {
                     "lat":float(latitude), 
@@ -238,7 +237,41 @@ def vehicle_details(request):
             undata.vehicleType = vehicleType
             print("except called")
             undata.save()
-        return HttpResponse("data stored")
+        username = (request.session['username'])
+        print(username)
+            # idata = UsersCurrentAddress(username=username,lat = latitude,lng = longitude)
+            # idata.save()
+        udata = UsersCurrentAddress.objects.get(username = username)
+        latitude = udata.lat
+        longitude = udata.lng
+        udata.save()
+            # if (UsersCustomer.objects.filter(username =username).exists() == True):
+      
+    
+        key = settings.GOOGLE_API_KEY
+            # eligable_locations = Locations.objects.filter(place_id__isnull=False)
+        locations = []
+        print("Called from login")
+        for a in range(0,1): 
+            data = {
+                    "lat":float(latitude), 
+                    "lng": float(longitude), 
+                    "name":'',
+                    }
+
+            locations.append(data)
+
+            print(locations)
+        context = {
+                "key": key, 
+                "locations": locations
+        }
+            
+        return render(request, 'loading_bar.html', context)
+
+        
 
     return render(request,"issue_detailpage.html") 
     
+def accept_rules(request):
+    return render(request,"accept_rules.html") 

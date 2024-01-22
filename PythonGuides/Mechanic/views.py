@@ -232,6 +232,10 @@ def display_info(request,vehicle_number):
     from_adress_string = str(mech_address.mech_shop)+", "+str(mech_address.mech_Address)+", "+str(mech_address.mech_city)+", "+str(mech_address.mech_zipcode)
     add = UsersCurrentAddress.objects.get(username = cust_username)
     to_address = add.address
+    cust_lat = add.lat
+    cust_lng = add.lng
+    mech_lat = mech_address.lat
+    mech_lng = mech_address.lng
     now = datetime.now()
     gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
     calculate = gmaps.distance_matrix(
@@ -245,9 +249,17 @@ def display_info(request,vehicle_number):
 
     distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
     distance_kilometers = distance_meters/1000
-
+    
 
     
-    return render(request,'Mechanic/display_test.html',{'card_data':cust_username,'key':key,'duration_minutes':duration_minutes,'distance_kilometers':distance_kilometers})
+    return render(request,'Mechanic/display_test.html',
+                  {'card_data':cust_username,
+                   'key':key,'duration_minutes':duration_minutes,
+                   'distance_kilometers':distance_kilometers,
+                   'cust_lat':cust_lat,
+                   'cust_lng':cust_lng,
+                   'mech_lat':mech_lat,
+                   'mech_lng':mech_lng
+                   })
     # return render(request,"Mechanic/resolved_page.html")
     # return HttpResponse("hekk",vehicle_number)

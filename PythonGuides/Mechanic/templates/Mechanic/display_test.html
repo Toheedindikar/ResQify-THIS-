@@ -202,14 +202,14 @@
 
                 // Marker 1
                 var marker1 = new google.maps.Marker({
-                    position: { lat: 16.1823937, lng: 75.6959708 }, // Example coordinates
+                    position: { lat: {{ cust_lat | safe }}, lng: {{ cust_lng | safe  }} }, // Example coordinates
                     map: map,
                     title: 'Marker 1'
                 });
 
                 // Marker 2
                 var marker2 = new google.maps.Marker({
-                    position: { lat: 12.919891, lng: 77.499721 }, // Example coordinates
+                    position: { lat: {{ mech_lat | safe  }}, lng: {{ mech_lng | safe  }} }, // Example coordinates
                     map: map,
                     title: 'Marker 2'
                 });

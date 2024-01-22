@@ -9,4 +9,5 @@ urlpatterns = [
     path('BookMechanic',BookMechanic,name='BookMechanic'),
     path('loc',loc,name="loc"), 
     path('vehicle_details',vehicle_details,name="vehicle_details"), 
+    path('accept_rules',accept_rules,name="accept_rules")
 ]
