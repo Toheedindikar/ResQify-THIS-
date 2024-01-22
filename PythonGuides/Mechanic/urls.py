@@ -10,7 +10,7 @@ urlpatterns = [
     path('get_vehicle_data',get_vehicle_data,name='get_vehicle_data'),
     path('mechanic/next_page',next_page,name='next_page'),
     path('mech_dashboard',mech_dashboard,name='mech_dashboard'),
-    path('display_info/<str:vehicle_number>/',display_info,name='display_info'),
+    path('display_info/<str:username>/',display_info,name='display_info'),
     
 ]
 

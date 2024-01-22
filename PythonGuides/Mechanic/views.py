@@ -37,17 +37,29 @@ def signup_mech(request):
 
 def mech_details(request):
     if request.method == 'POST':
-        form = mech_detailsModelForm(request.POST)
-        form.username = request.session['username']
-        if form.is_valid():
-            form.save()
+       
+        username = request.session['username']
+        
+            # Accessing form values
+        mech_shop = request.POST['mech_shop']
+        mech_address = request.POST['address']
+        mech_zipcode = request.POST['mech_zipcode']
+        mech_city = request.POST['mech_city']
+        print("inside",mech_shop)
+        adress_string = str(mech_shop)+", "+str(mech_address)+", "+str(mech_zipcode)+", "+str(mech_city)+", "+"India"
+        gmaps = googlemaps.Client(key = settings.GOOGLE_API_KEY)
+        result = gmaps.geocode(adress_string)[0]    
+        lat = result.get('geometry', {}).get('location', {}).get('lat', None)
+        lng = result.get('geometry', {}).get('location', {}).get('lng', None)
+        data = MechanicDetails(mech_shop=mech_shop,mech_Address= mech_address,mech_zipcode=mech_zipcode,mech_city=mech_city,username=username,lat = lat,lng = lng)
+        data.save()
+      
         
         return redirect('mech_login')
          
-    else:
-        form = mech_detailsModelForm()
+   
 
-    return render(request,'Mechanic/mech_details.html',{'form': form})
+    return render(request,'Mechanic/mech_details.html')
 
 def mech_login(request):
     if request.method == 'POST':
@@ -223,19 +235,23 @@ def mech_dashboard(request):
                 } 
             return render(request,'Mechanic/mechdashboard.html',context=context)
 
-def display_info(request,vehicle_number):
-    cust_username = vehicle_number
+def display_info(request,username):
+    cust_username = username
     key = settings.GOOGLE_API_KEY
     mech_username = request.session['username']
     mech_address = MechanicDetails.objects.get(username = mech_username)
 
     from_adress_string = str(mech_address.mech_shop)+", "+str(mech_address.mech_Address)+", "+str(mech_address.mech_city)+", "+str(mech_address.mech_zipcode)
     add = UsersCurrentAddress.objects.get(username = cust_username)
+    username = UsersCustomer.objects.get(username = cust_username)
+    mech_name = UsersMechanic.objects.get(username = mech_username )
     to_address = add.address
     cust_lat = add.lat
+    print(cust_lat)
     cust_lng = add.lng
     mech_lat = mech_address.lat
     mech_lng = mech_address.lng
+    print(mech_lat,mech_lng)
     now = datetime.now()
     gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
     calculate = gmaps.distance_matrix(
@@ -244,22 +260,42 @@ def display_info(request,vehicle_number):
                     mode = 'driving',
                     departure_time = now
     )
+    locations = []
+    data = {
+        'cust_lat':float(cust_lat),
+        'cust_lng':float(cust_lng),
+        'mech_lat':float(mech_lat),
+        'mech_lng':float(mech_lng)
+    }
+    locations.append(data)
     duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
     duration_minutes = duration_seconds
 
     distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
     distance_kilometers = distance_meters/1000
-    
-
+    # status = Booking_status(issueid = add.issueid , cust_name = username.name ,cust_username = cust_username,mech_name = mech_name.name,mech_username = request.session['username'], mech_assigned = 1,issue_resolved_status = 0,cust_lat = cust_lat,cust_lng = cust_lng,mech_lat = mech_lat,mech_lng=mech_lng  )
+    # status.save()
+    status = Booking_status.objects.get(cust_username = cust_username )
+    status.issueid = add.issueid
+    status.cust_name = username.name
+    status.mech_name = mech_name.name
+    status.mech_username = request.session['username']
+    status.mech_assigned = 1
+    status.issue_resolved_status = 0
+    status.cust_lat = cust_lat
+    status.cust_lng = cust_lng
+    status.mech_lat = mech_lat
+    status.mech_lng = mech_lng
+    status.save()
     
     return render(request,'Mechanic/display_test.html',
                   {'card_data':cust_username,
+                   'cust_name':username.name ,
                    'key':key,'duration_minutes':duration_minutes,
                    'distance_kilometers':distance_kilometers,
-                   'cust_lat':cust_lat,
-                   'cust_lng':cust_lng,
-                   'mech_lat':mech_lat,
-                   'mech_lng':mech_lng
+                   'locations' :locations,
+                   'phone' : add.phone,
+                   'address': add.address
                    })
     # return render(request,"Mechanic/resolved_page.html")
     # return HttpResponse("hekk",vehicle_number)

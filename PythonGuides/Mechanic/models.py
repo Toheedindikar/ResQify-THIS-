@@ -23,3 +23,18 @@ class MechanicDetails(models.Model):
     class Meta:
         db_table="MechanicDetails"
 
+class Booking_status(models.Model):
+    issueid = models.CharField(max_length=1000,blank=True, null=True)
+    cust_name = models.CharField(max_length=500,blank=True, null=True)
+    cust_username = models.CharField(max_length=500,blank=True, null=True)
+    mech_name = models.CharField(max_length=500,blank=True, null=True)
+    mech_username = models.CharField(max_length=500,blank=True, null=True)
+    mech_assigned = models.CharField(max_length=50,blank=True, null=True)
+    issue_resolved_status  = models.CharField(max_length=50,blank=True, null=True)
+    cust_lat = models.CharField(max_length=200,blank=True, null=True)
+    cust_lng =models.CharField(max_length=200,blank=True, null=True)
+    mech_lat = models.CharField(max_length=200,blank=True, null=True)
+    mech_lng = models.CharField(max_length=200,blank=True, null=True)
+    class Meta:
+        db_table="Booking_status"
+

@@ -58,6 +58,7 @@
             <input type="checkbox" id="acceptCheckbox" onclick="getLocation()">
             I accept the rules and regulations.
         </label>
+        <p id="demo"></p>
         
    
         
@@ -69,13 +70,7 @@
 
     
     <!-- <button onclick="getLocation()">Try It</button> -->
-    
    
-    
-    
-      
-    
-    
         <script>
           const x = document.getElementById("demo");
     
@@ -88,8 +83,8 @@
           }
     
           function showPosition(position) {
-              x.innerHTML = "Latitude: " + position.coords.latitude +
-                  "<br>Longitude: " + position.coords.longitude;
+            //   x.innerHTML = "Latitude: " + position.coords.latitude +
+            //       "<br>Longitude: " + position.coords.longitude;
     
               // Send data to Django backend
               fetch('http://127.0.0.1:8000/save_location', {

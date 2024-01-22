@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from requests import session
 from. models import *
+from Mechanic.models import *
 from home.encrypt_util import *
 import googlemaps
 from django.http import JsonResponse
@@ -49,22 +50,6 @@ def navbar(request):
     return render(request, 'loading_bar.html')
 
 
-def register(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        password = request.POST['password']
-        print('Original Password:', request.POST['password'])
-        encryptpass= encrypt(request.POST['password'])
-        print('Encrypt Password:',encryptpass)
-        decryptpass= decrypt(encryptpass)
-        print('Decrypt Password:',decryptpass)
-        data=EmpLogin(name=name, email=email, password=password)
-        data = UsersCustomer(name=name)
-        data.save()
-        return HttpResponse('Done')
-    else:
-        return render(request, 'login_final.html')
 
 
 def signup(request):
@@ -86,6 +71,7 @@ def signup(request):
                 data.save()
                 ldata = UsersCurrentAddress(username=username)
                 ldata.save()
+                issue = Booking_status(cust_username=username)
                 return render(request, 'login_final.html')
             
         else:
@@ -104,7 +90,7 @@ def login(request):
             if(decrypted == password):
                 request.session['name'] = verify.name
                 request.session['username'] = verify.username
-                return accept_rules(request)
+                return redirect('accept_rules')
         except:
             return HttpResponse("Either the user does not exists or the password is wrong")
 
@@ -132,7 +118,7 @@ def save_location(request):
             print(longitude)
             print("post req ")
             username = (request.session['username'])
-            print(username)
+            print("save location call")
             # idata = UsersCurrentAddress(username=username,lat = latitude,lng = longitude)
             # idata.save()
             udata = UsersCurrentAddress.objects.get(username = username)
@@ -275,3 +261,18 @@ def vehicle_details(request):
     
 def accept_rules(request):
     return render(request,"accept_rules.html") 
+
+
+def check_mechanic(request):
+    cust_username = request.session['username']
+    status = Booking_status.objects.get(cust_username = cust_username)
+    booked = status.mech_assigned
+    if booked:
+        print("booked")
+        return HttpResponse("boodackeed")
+    else:
+        return JsonResponse({'status': 'not_found'})
+    
+
+def mech_booked(request):
+    return HttpResponse("boooked")
