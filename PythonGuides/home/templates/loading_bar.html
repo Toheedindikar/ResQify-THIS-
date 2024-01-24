@@ -238,7 +238,7 @@
     window.initMap = initMap
 
     function checkForMechanic() {
-        fetch('http://127.0.0.1:8000/mech_booked', {
+        fetch('http://127.0.0.1:8000/check_mechanic', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -249,7 +249,8 @@
             .then(data => {
                 if (data.status === 'found') {
                     // Mechanic found, redirect to the next page
-                    window.location.href = "{% url 'mech_booked' %}";
+                    console.log("found");
+                    window.location.href = 'http://127.0.0.1:8000/mech_booked';
                 } else {
                     // Mechanic not found, continue checking
                     setTimeout(checkForMechanic, 5000); // Retry after a 5-second delay

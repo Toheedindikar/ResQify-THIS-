@@ -15,7 +15,7 @@
             padding: 0;
             margin: 0;
             padding: 0;
-            animation: pulse 100s infinite;
+            animation: pulse 10s infinite;
             background-image: url('{% static "images/road.jpg" %}');
             background-size: cover;  /* Adjust the background size as needed */
             background-repeat: no-repeat; 
@@ -98,33 +98,36 @@
             height: 100%;
             border-radius: 4px;
             box-shadow: 0 0 5px rgba(0, 0, 0, .2);
-            animation: load 10s infinite;
+            animation: load {{ duration_minutes }}s infinite;
         }
 
         @keyframes load {
             0% {
                 width: 0;
-                background: rgb(157, 233, 59);
+                background: rgb(214, 211, 211);
+
             }
 
             25% {
                 width: 40%;
-                background: #23f52d;
+                background: rgb(180, 178, 178);
+
             }
 
             50% {
                 width: 60%;
-                background: #e4f82e;
+                background: rgb(129, 128, 128);
+
             }
 
             75% {
                 width: 75%;
-                background: #fa9c32;
+                background: rgb(104, 103, 103);
             }
 
             100% {
                 width: 100%;
-                background: #e60b0bf1;
+                background: rgb(49, 48, 48);
             }
         }
 

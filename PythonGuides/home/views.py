@@ -269,10 +269,13 @@ def check_mechanic(request):
     booked = status.mech_assigned
     if booked:
         print("booked")
-        return HttpResponse("boodackeed")
+        return JsonResponse({'status': 'found'})
     else:
         return JsonResponse({'status': 'not_found'})
     
 
 def mech_booked(request):
-    return HttpResponse("boooked")
+    return render(request,"accept_rules.html") 
+
+def profile(request):
+    return render(request,"profile.html")

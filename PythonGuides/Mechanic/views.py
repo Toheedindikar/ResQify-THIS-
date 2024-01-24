@@ -267,10 +267,11 @@ def display_info(request,username):
         'mech_lat':float(mech_lat),
         'mech_lng':float(mech_lng)
     }
+    print(cust_lat)
     locations.append(data)
     duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
     duration_minutes = duration_seconds
-
+    # duration_seconds = duration_seconds*60
     distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
     distance_kilometers = distance_meters/1000
     # status = Booking_status(issueid = add.issueid , cust_name = username.name ,cust_username = cust_username,mech_name = mech_name.name,mech_username = request.session['username'], mech_assigned = 1,issue_resolved_status = 0,cust_lat = cust_lat,cust_lng = cust_lng,mech_lat = mech_lat,mech_lng=mech_lng  )
@@ -295,7 +296,8 @@ def display_info(request,username):
                    'distance_kilometers':distance_kilometers,
                    'locations' :locations,
                    'phone' : add.phone,
-                   'address': add.address
+                   'address': add.address,
+                   'duration_seconds':duration_seconds,
                    })
     # return render(request,"Mechanic/resolved_page.html")
     # return HttpResponse("hekk",vehicle_number)

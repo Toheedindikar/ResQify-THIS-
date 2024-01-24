@@ -12,4 +12,5 @@ urlpatterns = [
     path('accept_rules',accept_rules,name="accept_rules"),
     path('check_mechanic',check_mechanic,name='check_mechanic'),
     path('mech_booked',mech_booked,name="mech_booked"),
+    path('profile',profile,name="profile"),
 ]
