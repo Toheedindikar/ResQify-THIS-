@@ -276,6 +276,23 @@ def display_info(request,username):
     distance_kilometers = distance_meters/1000
     # status = Booking_status(issueid = add.issueid , cust_name = username.name ,cust_username = cust_username,mech_name = mech_name.name,mech_username = request.session['username'], mech_assigned = 1,issue_resolved_status = 0,cust_lat = cust_lat,cust_lng = cust_lng,mech_lat = mech_lat,mech_lng=mech_lng  )
     # status.save()
+    current_datetime = datetime.now()
+    def month_name(month_number):
+        month_names = [
+            "January", "February", "March", "April",
+            "May", "June", "July", "August",
+            "September", "October", "November", "December"
+        ]
+        return month_names[month_number - 1]
+
+    # Format the datetime
+    formatted_datetime = current_datetime.strftime("%d %B %Y ")
+    time = current_datetime.strftime("%H:%M:%S")
+    
+    # Replace the month number with the month name
+    formatted_datetime = formatted_datetime.replace(
+        current_datetime.strftime("%B"), month_name(current_datetime.month)
+    )
     status = Booking_status.objects.get(cust_username = cust_username )
     status.issueid = add.issueid
     status.cust_name = username.name
@@ -287,6 +304,10 @@ def display_info(request,username):
     status.cust_lng = cust_lng
     status.mech_lat = mech_lat
     status.mech_lng = mech_lng
+    status.duration_kilometers = distance_kilometers
+    status.duration_seconds = duration_seconds
+    status.booking_time = time
+    status.booking_date = formatted_datetime
     status.save()
     
     return render(request,'Mechanic/display_test.html',

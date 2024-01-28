@@ -124,7 +124,7 @@
             justify-content: space-around;
             text-align: center;
             padding: 20px;
-            margin-top: 160px;
+            margin-top: 300px;
         }
 
         .mecha {
@@ -168,23 +168,16 @@
                 <img src="{% static '/images/mech1.jpg' %}" alt="Logo" class="responsive-img">
                 <span class="brand">Resqify</span>
             </div>
-            <a href="#" class="aside-link">
-                <aside>
-                    <a href="login_final.html" class="login">Login</a>
-                    <a href="login_final.html" class="signup">Signup</a>
-                </aside>
-            </a>
+            
         </div>
     </header>
-    <section id="home">
-        <h1>Login to Access Your Account</h1>
-    </section>
-    <form action="POST" action="navbar.html">
+    
+    <form method="POST" action="navbar">
         <section id="users">
-            <a href="#" class="mecha">
+            <a href="{% url 'mech_login' %}" class="mecha">
                 <div id="mechanic"><b>Mechanic</b></div>
             </a>
-            <a href="#" class="custo">
+            <a href="{% url 'login' %}" class="custo">
                 <div id="customer"><b>Customer</b></div>
             </a>
         </section>

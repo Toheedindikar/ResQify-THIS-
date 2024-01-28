@@ -35,6 +35,10 @@ class Booking_status(models.Model):
     cust_lng =models.CharField(max_length=200,blank=True, null=True)
     mech_lat = models.CharField(max_length=200,blank=True, null=True)
     mech_lng = models.CharField(max_length=200,blank=True, null=True)
+    duration_seconds =  models.CharField(max_length=50,blank=True, null=True)
+    duration_kilometers =  models.CharField(max_length=50,blank=True, null=True)
+    booking_time =  models.CharField(max_length=200,blank=True, null=True)
+    booking_date =  models.CharField(max_length=200,blank=True, null=True)
     class Meta:
         db_table="Booking_status"
 

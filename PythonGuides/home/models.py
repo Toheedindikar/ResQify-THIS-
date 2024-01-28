@@ -46,4 +46,35 @@ class UsersCurrentAddress(models.Model):
     class Meta:
         db_table="UsersCurrentAddress"
 
+class Feedback(models.Model):
+    issueid = models.CharField(max_length=1000,blank=True, null=True)
+    desc = models.CharField(max_length=5000,blank=True, null=True)
+    rating = models.CharField(max_length=200,blank=True, null=True)
+    cust_name = models.CharField(max_length=500,blank=True, null=True)
+    cust_username = models.CharField(max_length=500,blank=True, null=True)
+    mech_name = models.CharField(max_length=500,blank=True, null=True)
+    mech_username = models.CharField(max_length=500,blank=True, null=True)
+    class Meta:
+        db_table="Feedback"
+
+class Profile(models.Model):
+    phone = models.CharField(max_length=1000,blank=True, null=True)
+    no_of_bookings = models.CharField(max_length=5000,blank=True, null=True)
+    rating = models.CharField(max_length=200,blank=True, null=True)
+    cust_name = models.CharField(max_length=500,blank=True, null=True)
+    cust_username = models.CharField(max_length=500,blank=True, null=True)
+    class Meta:
+        db_table="Profile"
+
+class Bookings(models.Model):
+    cust_username =models.CharField(max_length=500,blank=True, null=True)   
+    mech_name= models.CharField(max_length=200,blank=True, null=True)
+    booking_date = models.CharField(max_length=200,blank=True, null=True)
+    booking_time = models.CharField(max_length=200,blank=True, null=True)
+    issue_desc = models.CharField(max_length=2000,blank=True, null=True)
+    issue_resolved_status =models.CharField(max_length=200,blank=True, null=True)
+    mech_mobile = models.CharField(max_length=200,blank=True, null=True)
+    class Meta:
+        db_table="Bookings"
+
 
