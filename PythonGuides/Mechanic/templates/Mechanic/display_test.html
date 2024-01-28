@@ -162,13 +162,13 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Bookings</a>
+                                <a class="nav-link" href="{% url 'mech_bookings' %}">Bookings</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
+                                <a class="nav-link" href="{% url 'logout_mech' %}">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
                                         style="margin-left: 10px;"></i></a>
                             </li>
                         </ul>
@@ -187,9 +187,10 @@
                 </div>
             </div>
         </center>
-        <form action="post" actin="">
-          <button type="button" class="submit" onclick="redirectToNextPage()">Issue Resolved</button>
-          <button type="button" class="submit" onclick="redirectToNextPage()">Issue Unresolved</button>
+        <form method="post" action="{% url 'mech_feedback' %}">
+            {% csrf_token %}
+          <button class="submit" >Issue Resolved</button>
+          <button  class="submit">Issue Unresolved</button>
         </form>
        
         

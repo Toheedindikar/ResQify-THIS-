@@ -322,3 +322,22 @@ def display_info(request,username):
                    })
     # return render(request,"Mechanic/resolved_page.html")
     # return HttpResponse("hekk",vehicle_number)
+def logout_mech(request):
+    if 'username' in request.session:
+        del request.session['username']
+        
+    if 'name' in request.session:
+        del request.session['name']
+    
+    # You can perform additional logout actions here if needed
+
+    return redirect('home_page')
+
+def home_page(request):
+    return render(request,"Home_Page.html")
+
+def mech_profile(request):
+    return render(request,"profile.html")
+
+def mech_feedback(request):
+    return render(request,"feedback.html")

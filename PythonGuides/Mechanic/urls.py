@@ -11,6 +11,10 @@ urlpatterns = [
     path('mechanic/next_page',next_page,name='next_page'),
     path('mech_dashboard',mech_dashboard,name='mech_dashboard'),
     path('display_info/<str:username>/',display_info,name='display_info'),
+    path('home_page',home_page,name='home_page'),
+    path('logout_mech',logout_mech,name='logout_mech'),
+    path('mech_profile',mech_profile,name='mech_profile'),
+    path('mech_feedback',mech_feedback,name='mech_feedback'),
     
 ]
 
