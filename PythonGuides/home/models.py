@@ -63,6 +63,8 @@ class Profile(models.Model):
     rating = models.CharField(max_length=200,blank=True, null=True)
     cust_name = models.CharField(max_length=500,blank=True, null=True)
     cust_username = models.CharField(max_length=500,blank=True, null=True)
+    mech_name = models.CharField(max_length=500,blank=True, null=True)
+    mech_username = models.CharField(max_length=500,blank=True, null=True)
     class Meta:
         db_table="Profile"
 

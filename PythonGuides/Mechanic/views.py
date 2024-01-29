@@ -28,6 +28,9 @@ def signup_mech(request):
                     data = UsersMechanic(name=name,username=username,email=email,mobile=phone,password= encryptpass)
                     data.save()
                     form = mech_detailsModelForm()
+                    profile = Profile(mech_username=username,mech_name = name)
+                    profile.no_of_bookings = 0
+                    profile.save()
                     return redirect('mech_details')
                 
             else:
@@ -309,6 +312,10 @@ def display_info(request,username):
     status.booking_time = time
     status.booking_date = formatted_datetime
     status.save()
+    profile = Profile.objects.get(mech_username = mech_username )
+    val = int(profile.no_of_bookings)
+    val +=1
+    profile.save()
     
     return render(request,'Mechanic/display_test.html',
                   {'card_data':cust_username,
@@ -337,7 +344,45 @@ def home_page(request):
     return render(request,"Home_Page.html")
 
 def mech_profile(request):
-    return render(request,"profile.html")
+    data = UsersMechanic.objects.get(username = request.session['username'] )
+    mech_name = data.name
+
+    profile = Profile.objects.get(mech_username = request.session['username'] )
+    no_of_bookings = profile.no_of_bookings
+    rating = profile.rating
+    phone = UsersMechanic.objects.get(username = request.session['username'] )
+    mobile = phone.mobile
+    return render(request,"Mechanic/profile.html",{'mech_name':mech_name,'no_of_bookings':no_of_bookings,'rating':rating,'phone':mobile})
 
 def mech_feedback(request):
-    return render(request,"feedback.html")
+    if request.method == 'POST':
+        resolved =  request.POST['Resolved']
+        print(resolved)
+        unresolved = request.POST['Unresolved']
+        status = Booking_status.objects.get(mech_username = request.session['username'] )
+        if resolved:
+            status.issue_resolved_status = 1
+        else:
+            status.issue_resolved_status = 0
+        status.save()
+        return redirect('home_page')
+
+
+    return render(request,"Mechanic/feedback.html")
+
+def mech_resolved(request):
+    if request.method == 'POST':
+        status = Booking_status.objects.get(mech_username = request.session['username'] )
+        status.issue_resolved_status = 1
+        status.save()
+    return  redirect('home_page')
+
+def mech_unresolved(request):
+    if request.method == 'POST':
+        status = Booking_status.objects.get(mech_username = request.session['username'] )
+        status.issue_resolved_status = 0
+        status.save()
+    return  redirect('home_page')
+
+def mech_bookings(request):
+    return render(request,"Mechanic/Bookings.html")

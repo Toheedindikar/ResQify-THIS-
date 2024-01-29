@@ -15,6 +15,9 @@ urlpatterns = [
     path('logout_mech',logout_mech,name='logout_mech'),
     path('mech_profile',mech_profile,name='mech_profile'),
     path('mech_feedback',mech_feedback,name='mech_feedback'),
+    path('mech_bookings',mech_bookings,name='mech_bookings'),
+    path('mech_resolved',mech_resolved,name='mech_resolved'),
+    path('mech_unresolved',mech_unresolved,name='mech_unresolved'),
     
 ]
 

@@ -218,7 +218,7 @@ def BookMechanic(request):
         #     return HttpResponse("No address found")
 
 def loc(request):
-    return render(request,"location.html") 
+    return render(request,"index.html") 
 
 import random
 
@@ -375,13 +375,17 @@ def feedback(request):
         status.mech_assigned = 0
         status.save()
         booking = Bookings(booking_time = status.booking_time,booking_date= status.booking_date,mech_name = status.mech_name ,cust_username =cust_username)
-        mech_phone = UsersMechanic.objects.get(username = status.mech_name)
+        mech_phone = UsersMechanic.objects.get(username = status.mech_username)
         booking.phone = mech_phone.mobile
         issue = UsersCurrentAddress.objects.get(username = cust_username)
         booking.issue_desc = issue.issuedesc
-        booking.save()
-        
-        return render(request,"feedback.html")
+        booking.save()   
+        profile = Profile.objects.get(mech_username = status.mech_username )
+        profile.rating = 4
+
+        profile.save()
+
+        return redirect('home_page')
     return render(request,"feedback.html")
 
 def home_page(request):

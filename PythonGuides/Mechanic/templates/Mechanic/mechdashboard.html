@@ -72,10 +72,10 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'mech_profile' %}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Bookings</a>
+                        <a class="nav-link" href="{% url 'mech_bookings' %}">Bookings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'mech_login' %}">LogOut <i class="fa-solid fa-arrow-right-from-bracket"

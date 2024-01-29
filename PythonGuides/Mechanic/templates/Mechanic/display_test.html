@@ -148,7 +148,7 @@
         <div class="Loading"></div>
     </div>
 
-    <form method="post" action="next_page.php">
+   
         <section>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
                 <div class="container-fluid">
@@ -162,7 +162,7 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'mech_profile' %}">Profile</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'mech_bookings' %}">Bookings</a>
@@ -187,12 +187,15 @@
                 </div>
             </div>
         </center>
-        <form method="post" action="{% url 'mech_feedback' %}">
+        <form method="post" action="{% url 'mech_resolved' %}">
             {% csrf_token %}
-          <button class="submit" >Issue Resolved</button>
-          <button  class="submit">Issue Unresolved</button>
+          <button class="submit" name="Resolved" >Issue Resolved</button>
+          
         </form>
-       
+        <form method="post" action="{% url 'mech_unresolved' %}">
+            {% csrf_token %}
+        <button  class="submit" name="Unresolved">Issue Unresolved</button>
+       </form>
         
 
         

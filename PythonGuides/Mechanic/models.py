@@ -42,3 +42,4 @@ class Booking_status(models.Model):
     class Meta:
         db_table="Booking_status"
 
+
