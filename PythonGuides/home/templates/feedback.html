@@ -1,4 +1,4 @@
-{% load static %}
+<!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,5 +69,107 @@
        </form> 
          
     </section>
+    <script type="text/javascript" src="https://form.jotform.com/jsform/240290887438466"></script>
+</body>
+</html> -->
+<!-- feedback/templates/feedback/feedback_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #c7bcbc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .feedback-container {
+            background-color: rgba(221, 209, 209, 0.9); /* Transparent white background */
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Adjusted box shadow for elevation */
+            padding: 20px;
+            border-radius: 12px;
+            width: 70%;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, textarea {
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Custom styles for select dropdown */
+        select {
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #555;
+        }
+
+        /* Additional styles for better spacing */
+        br {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <h2>Feedback Form</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="{{ form.rating.id_for_label }}">Rating:</label>
+            {{ form.rating }}
+            <br>
+            <label for="{{ form.issue_description.id_for_label }}">Issue Description:</label>
+            {{ form.issue_description }}
+            <br>
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
 </body>
 </html>
+

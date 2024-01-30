@@ -242,7 +242,7 @@ def BookMechanic(request):
         # lat = result.get('geometry', {}).get('location', {}).get('lat', None)
         # lng = result.get('geometry', {}).get('location', {}).get('lng', None)
         # # print(lat)
-        # # print(lng)
+        # # print(lng)F
         # # return HttpResponse("success")
         # gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         # result = gmaps.reverse_geocode((lat, lng))
@@ -394,7 +394,7 @@ def waiting_page(request):
                    'duration_seconds':duration_seconds,
                    })
 
-
+from .forms import FeedbackForm
 def feedback(request):
     if request.method == 'POST':
         cust_username = request.session['username']
@@ -426,7 +426,9 @@ def feedback(request):
         profile.save()
 
         return redirect('home_page')
-    return render(request,"feedback.html")
+    else:
+        form = FeedbackForm()
+    return render(request,"feedback.html", {'form': form})
 
 def home_page(request):
     return render(request,"Home_Page.html") 
