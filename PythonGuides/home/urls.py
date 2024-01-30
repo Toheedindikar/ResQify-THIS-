@@ -19,4 +19,7 @@ urlpatterns = [
     path('feedback',feedback,name="feedback"),
     path('logout_cust',logout_cust,name="logout_cust"),
     path('Booking_histroy',Booking_histroy,name="Booking_histroy"),
+    path('otp',otp,name="otp"),
+    path('forgot_password',forgot_password,name="forgot_password"),
+    path("otp_forgot_passwd",otp_forgot_passwd,name="otp_forgot_passwd"),
 ]

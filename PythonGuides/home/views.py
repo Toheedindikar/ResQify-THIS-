@@ -9,6 +9,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from datetime import datetime
+from django.core.mail import send_mail
+from PythonGuides.settings import EMAIL_HOST_USER
+
 def navbar(request):
     if request.method == 'POST':
         username = (request.session['username'])
@@ -75,12 +78,49 @@ def signup(request):
                 issue.save()
                 profil = Profile(cust_username=username,rating = 5,phone=phone,no_of_bookings = 0,cust_name = name)
                 profil.save()
-                
-                return render(request, 'login_final.html')
+                request.session['username'] = username
+                return redirect('otp')
         else:
             return render(request, 'login_final.html')
   
     return render(request, 'login_final.html')
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        p1 = request.POST.get('p1', '')
+        p2 = request.POST.get('p2', '')
+        if(p1 == p2):
+            request.session['username'] = username
+            request.session['newp'] = p1
+            return redirect ('otp_forgot_passwd')
+    return render(request, 'forgot_password.html')  
+
+
+global num
+num = 0
+def otp_forgot_passwd(request):
+    global num
+    if request.method == 'POST':
+        otp = request.POST.get('otp', '')
+        if (int(otp) == int(num)):
+            dat = UsersCustomer.objects.get(username = request.session['username'])
+            encryptpass= encrypt(request.session['newp'])
+            dat.password = encryptpass
+            dat.save()
+            messages.success(request, 'OTP verified successfully!')
+            return redirect('login')
+        else:
+            messages.success(request, 'OTP not verified successfully!')
+            return HttpResponse('invalid Otp')
+    else:
+        mail = UsersCustomer.objects.get(username = request.session['username'])
+        num = random.randrange(1000,9999)
+        send_mail('your otp is','your otp is {}'.format(num),EMAIL_HOST_USER,[mail.email],fail_silently=True)
+        return  render(request,"forgot_password_otp.html")
+            
+
 
 def login(request):
     if request.method == "POST":
@@ -401,9 +441,28 @@ def Booking_histroy(request):
             "booking_time" : i.booking_time,
             "booking_date" : i.booking_date,
             "mech_name" : i.mech_name,
-            "mech_mobile" : i.mech_mobile,
+            
             "issue_desc" : i.issue_desc 
         }
         bookings.append(data)
 
     return render(request,"Bookings.html",{"bookings":bookings})
+
+from django.contrib import messages
+global no
+no = 0
+def otp(request):
+    global no
+    if request.method == 'POST':
+        otp = request.POST.get('otp', '')
+        if (int(otp) == int(no)):
+            messages.success(request, 'OTP verified successfully!')
+            return redirect('login')
+        else:
+            messages.success(request, 'OTP verified successfully!')
+            return HttpResponse('invalid')
+    else:
+        mail = UsersCustomer.objects.get(username = request.session['username'])
+        no = random.randrange(1000,9999)
+        send_mail('your otp is','your otp is {}'.format(no),EMAIL_HOST_USER,[mail.email],fail_silently=True)
+        return  render(request,"otp.html")

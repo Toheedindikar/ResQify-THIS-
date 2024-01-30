@@ -288,11 +288,8 @@ def display_info(request,username):
         ]
         return month_names[month_number - 1]
 
-    # Format the datetime
     formatted_datetime = current_datetime.strftime("%d %B %Y ")
     time = current_datetime.strftime("%H:%M:%S")
-    
-    # Replace the month number with the month name
     formatted_datetime = formatted_datetime.replace(
         current_datetime.strftime("%B"), month_name(current_datetime.month)
     )
@@ -312,6 +309,8 @@ def display_info(request,username):
     status.booking_time = time
     status.booking_date = formatted_datetime
     status.save()
+    book = Bookings(cust_username = cust_username, mech_name= mech_name, booking_date =formatted_datetime, booking_time = time, issue_desc = add.issuedesc )
+    book.save()
     profile = Profile.objects.get(mech_username = mech_username )
     val = int(profile.no_of_bookings)
     val +=1
