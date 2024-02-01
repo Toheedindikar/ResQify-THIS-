@@ -103,8 +103,13 @@ num = 0
 def otp_forgot_passwd(request):
     global num
     if request.method == 'POST':
-        otp = request.POST.get('otp', '')
-        if (int(otp) == int(num)):
+        otp1 = request.POST.get('otp1')
+        otp2 = request.POST.get('otp2')
+        otp3 = request.POST.get('otp3')
+        otp4 = request.POST.get('otp4')
+
+        entered_otp = f"{otp1}{otp2}{otp3}{otp4}"
+        if (int(entered_otp) == int(num)):
             dat = UsersCustomer.objects.get(username = request.session['username'])
             encryptpass= encrypt(request.session['newp'])
             dat.password = encryptpass
@@ -117,7 +122,19 @@ def otp_forgot_passwd(request):
     else:
         mail = UsersCustomer.objects.get(username = request.session['username'])
         num = random.randrange(1000,9999)
-        send_mail('your otp is','your otp is {}'.format(num),EMAIL_HOST_USER,[mail.email],fail_silently=True)
+        subject = ''' Hello,
+ 
+{} is your one-time passcode (OTP) for the ResQify app.
+ 
+Use this OTP to reset your password.
+ 
+The code was requested from the ResQify's App on google your device.It will be valid for 4 hours.
+ 
+ 
+Enjoy the app!
+ 
+ResQify's team'''
+        send_mail('Your One Time Passcode for ResQify',subject.format(num),EMAIL_HOST_USER,[mail.email],fail_silently=True)
         return  render(request,"forgot_password_otp.html")
             
 
@@ -133,15 +150,15 @@ def login(request):
             if(decrypted == password):
                 request.session['name'] = verify.name
                 request.session['username'] = verify.username
-                return redirect('accept_rules')
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'error': 'Invalid username or password'})
         except:
-            return HttpResponse("Either the user does not exists or the password is wrong")
-
+            return JsonResponse({'error': 'Invalid username or password'})
         # if (verify == username):
         #     print(username)
-        return HttpResponse("done")
-
-    return render(request,'login_final.html')
+        
+    return render(request,"login_final.html")
 
 def logout_cust(request):
     if 'username' in request.session:
@@ -159,7 +176,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt  # This is used to exempt the view from CSRF protection. Use it cautiously.
 def save_location(request):
-    
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -258,7 +274,7 @@ def BookMechanic(request):
         #     return HttpResponse("No address found")
 
 def loc(request):
-    return render(request,"index.html") 
+    return render(request,"passwardchange.html") 
 
 import random
 
@@ -431,7 +447,7 @@ def feedback(request):
     return render(request,"feedback.html", {'form': form})
 
 def home_page(request):
-    return render(request,"Home_Page.html") 
+    return render(request,"landing_page.html") 
 
 def Booking_histroy(request):
     cust_username = request.session['username']
@@ -466,5 +482,17 @@ def otp(request):
     else:
         mail = UsersCustomer.objects.get(username = request.session['username'])
         no = random.randrange(1000,9999)
-        send_mail('your otp is','your otp is {}'.format(no),EMAIL_HOST_USER,[mail.email],fail_silently=True)
+        subject = ''' Hello,
+ 
+{} is your one-time passcode (OTP) for the ResQify app.
+ 
+Uae the above OTP to register for ResQify App. 
+ 
+The code was requested from the ResQify's App on google your device.It will be valid for 4 hours.
+ 
+ 
+Enjoy the app!
+ 
+ResQify's team'''
+        send_mail('Your One Time Passcode for ResQify',subject.format(no),EMAIL_HOST_USER,[mail.email],fail_silently=True)
         return  render(request,"otp.html")

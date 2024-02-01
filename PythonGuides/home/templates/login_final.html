@@ -15,7 +15,7 @@
     <div class="cont">
         <div class="form sign-in">
             <h2>Welcome</h2>
-            <form method="post" action="{% url 'login' %}">
+            <form method="post" action="{% url 'login' %}" id="loginForm">
                 {% csrf_token %}
 
             <label>
@@ -27,7 +27,7 @@
                 <input type="password" name="password"/>
             </label>
             <p class="forgot-pass"><a href="{% url 'forgot_password' %}" style="text-decoration: none;"><b>Forgot password?</b></a></p>
-            <button  class="submit" onclick="getLocation()">LogIn</button>
+            <button  class="submit" >LogIn</button>
          </form>
         
         </div>
@@ -81,22 +81,7 @@
                 <button  class="submit">SignUp</button>
             </form>
             </div>
-            <!-- <div >
-            <form method="post" >
-                {% csrf_token %}
-                <label for="username">Username:</label>
-                <input type="text" name="name" required>
-                <br>
-                <label for="email">Email:</label>
-                <input type="email" name="email" required>
-                <br>
-                <label for="password">Password:</label>
-                <input type="password" name="password" required>
-                <br>
-                <button >Sign Up</button>
-              </form>
-              
-              </div> -->
+            
         </div>
     </div>
 
@@ -105,52 +90,38 @@
         document.querySelector('.img__btn').addEventListener('click', function() {
             document.querySelector('.cont').classList.toggle('s--signup');
         });
-        const x = document.getElementById("demo");
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
-  
-        function showPosition(position) {
-            x.innerHTML = "Latitude: " + position.coords.latitude +
-                "<br>Longitude: " + position.coords.longitude;
-  
-            // Send data to Django backend
-            fetch('http://127.0.0.1:8000/save_location', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-        }
-  
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
+        
     </script>
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    fetch(this.action, {
+                        method: this.method,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': this.elements['csrfmiddlewaretoken'].value,
+                        },
+                        body: new URLSearchParams(new FormData(this)),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);  // Display error message as a pop-up
+                        } else {
+                            window.location.href = "{% url 'accept_rules' %}";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            </script>
     
 </body>
 </html>

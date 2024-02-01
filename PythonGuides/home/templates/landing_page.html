@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<!--
+	Photon by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+    
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="{% static 'landing_page.css'%}" />
+    <noscript
+      ><link rel="stylesheet" href="{% static 'noscript.css'%}"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Header -->
+    <br>
+    <br>
+    <center>
+    <section style="background-color: rgba(25, 148, 117, 0.534); color: white;" >
+      <div class="inner">
+        <br>
+        <br>
+        <span class="logo"><img src="{% static 'images/resqify.png' %}" alt="" style="width: 100px; height: 100px;"></span>
+        <h1 style="color: white;">
+          Hi, I'm <strong style="color: white;">ResQify</strong>, here to assist you <br />
+          with vehicle breakdowns
+        </h1>
+        <p>
+          At ResQify, we understand the frustration and stress
+          that comes with unexpected vehicle breakdowns. <br>That's why we've
+          created a seamless platform that connects customers in need with
+          experienced mechanics, ensuring quick and efficient assistance
+          whenever you need it.
+        </p>
+        <ul class="actions special">
+          <li><a href="#one" class="button scrolly">Discover</a></li>
+        </ul>
+      </div>
+      <br>
+      <br>
+      
+    </section>
+  </center>
+
+    <!-- One -->
+    <section id="one" class="main style1">
+      <div class="container">
+        <div class="row gtr-150">
+          <div class="col-6 col-12-medium">
+            <header class="major">
+              <h2>
+				Your Roadside Companion
+              </h2>
+            </header>
+            <p>
+				Need help on the road? Quickly request assistance and get matched
+				 with a nearby mechanic.<br>
+				Ready to experience stress-free breakdown assistance? Request help now!
+				<ul class="actions special">
+					<li><a href="{% url 'login' %}" class="button">signup</a></li>
+				</ul>
+
+          </div>
+          <div class="col-6 col-12-medium imp-medium">
+            <span class="image fit"><img src="{% static 'images/pic00.jpg' %}" alt="" /></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two -->
+    <section id="one" class="main style1">
+      <div class="container">
+        <div class="row gtr-150">
+          <div class="col-6 col-12-medium imp-medium">
+            <span class="image fit"><img src="{% static 'images/pic01.jpg' %}" alt="" /></span>
+          </div>
+          <div class="col-6 col-12-medium">
+            <header class="major">
+              <h2>
+				Your Gateway to Helping Hands
+              </h2>
+            </header>
+            <p>
+				Be ready to lend your expertise. Accept assistance requests and get directions
+				 to the customer's location.<br>
+				Join our network of trusted mechanics and be the hero on the road. 
+				Ready to assist? Accept requests now!
+				<ul class="actions special">
+					<li><a href="{% url 'mech_login' %}"  class="button">signup</a></li>
+				</ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Three -->
+    <section id="three" class="main style1 special">
+      <div class="container">
+        <header class="major">
+          <h2>What I Serve as ResQify</h2>
+        </header>
+        <p></p>
+        <div class="row gtr-150">
+          <div class="col-4 col-12-medium">
+            <span class="image fit"><img src="{% static 'images/pic02.jpg' %}" alt="" /></span>
+            <h3> Instant Connection </h3>
+            <p>
+				Connect with the nearest available mechanic in just a few taps.
+            </p>
+           
+          </div>
+          <div class="col-4 col-12-medium">
+            <span class="image fit"><img src="{% static 'images/pic03.jpg' %}" alt="" /></span>
+            <h3>24/7 Assistance</h3>
+            <p>
+				We're here for you around the clock, ready to assist
+				 whenever and wherever you are.
+            </p>
+           
+          </div>
+          <div class="col-4 col-12-medium">
+            <span class="image fit"><img src="{% static 'images/pic04.jpg' %}" alt="" /></span>
+            <h3>  Trusted Mechanics</h3>
+            <p>
+				Our network of mechanics is thoroughly vetted for 
+				expertise and reliability.
+            </p>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <!-- Footer -->
+    <section id="footer">
+    
+      <ul class="copyright">
+        <li>Copyright&copy; 2024 ResQify</li>
+        
+      </ul>
+    </section>
+
+    <!-- Scripts -->
+    <script src="{% static 'query.min.js' %}"></script>
+    <script src="{% static 'jquery.scrolly.min.js' %}"></script>
+    <script src="{% static 'browser.min.js'}"></script>
+    <script src="{% static 'breakpoints.min.js' %}"></script>
+    <script src="{% static 'util.js' %}"></script>
+    <script src="{% static 'main.js' %}"></script>
+  </body>
+</html>
