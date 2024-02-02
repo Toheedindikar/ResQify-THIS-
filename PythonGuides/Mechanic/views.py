@@ -291,7 +291,7 @@ def mech_dashboard(request):
                 
                 
                 } 
-            return render(request,'Mechanic/mechdashboard.html',context=context)
+            return render(request,'Mechanic/service-1.html',context=context)
 
 def display_info(request,username):
     cust_username = username
@@ -371,7 +371,7 @@ def display_info(request,username):
     val +=1
     profile.save()
     
-    return render(request,'Mechanic/display_test.html',
+    return render(request,'Mechanic/s.html',
                   {'card_data':cust_username,
                    'cust_name':username.name ,
                    'key':key,'duration_minutes':duration_minutes,
@@ -395,7 +395,7 @@ def logout_mech(request):
     return redirect('home_page')
 
 def home_page(request):
-    return render(request,"Home_Page.html")
+    return render(request,"landing_page.html")
 
 def mech_profile(request):
     data = UsersMechanic.objects.get(username = request.session['username'] )
@@ -426,7 +426,8 @@ def mech_feedback(request):
 
 def mech_resolved(request):
     if request.method == 'POST':
-        status = Booking_status.objects.get(mech_username = request.session['username'] )
+        status = Booking_status.objects.filter(mech_username = request.session['username'] )
+        print(status)
         status.issue_resolved_status = 1
         status.save()
     return  redirect('home_page')
@@ -439,4 +440,4 @@ def mech_unresolved(request):
     return  redirect('home_page')
 
 def mech_bookings(request):
-    return render(request,"Mechanic/Bookings.html")
+    return render(request,"Mechanic/service-1.html")
