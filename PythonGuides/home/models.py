@@ -37,6 +37,7 @@ class UsersCurrentAddress(models.Model):
     vehicleType = models.CharField(max_length=100,blank=True, null=True)
     vehicleNo = models.CharField(max_length=100,blank=True, null=True)
     issuedesc = models.CharField(max_length=500,blank=True, null=True)
+    issuetype = models.CharField(max_length=500,blank=True, null=True)
     phone = models.CharField(max_length=500,blank=True, null=True)
     lat = models.CharField(max_length=200,blank=True, null=True)
     lng = models.CharField(max_length=200,blank=True, null=True)
@@ -54,16 +55,16 @@ class Feedback(models.Model):
     cust_username = models.CharField(max_length=500,blank=True, null=True)
     mech_name = models.CharField(max_length=500,blank=True, null=True)
     mech_username = models.CharField(max_length=500,blank=True, null=True)
-    RATING_CHOICES = (
-        (1, 'Poor'),
-        (2, 'Below Average'),
-        (3, 'Average'),
-        (4, 'Good'),
-        (5, 'Excellent'),
-    )
+    # RATING_CHOICES = (
+    #     (1, 'Poor'),
+    #     (2, 'Below Average'),
+    #     (3, 'Average'),
+    #     (4, 'Good'),
+    #     (5, 'Excellent'),
+    # )
 
-    rating = models.IntegerField(choices=RATING_CHOICES)
-    issue_description = models.TextField()
+    # rating = models.IntegerField(choices=RATING_CHOICES)
+    # issue_description = models.TextField()
     class Meta:
         db_table="Feedback"
 

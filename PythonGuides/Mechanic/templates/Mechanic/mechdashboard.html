@@ -279,14 +279,14 @@ window.initMap = initMap;
     
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: 37.7749, lng: -122.4194 }, // Set initial center coordinates
-            zoom: 4,
+            center: { lat:  12.9675955, lng: 77.5963159}, // Set initial center coordinates
+            zoom: 12,
         });
     
         updateMapData();
     
         setInterval(updateMapData, 30000000);
-        setInterval(updateCardData, 30000);
+        setInterval(renderCards, 30000);
     }
     
     function updateMapData() {

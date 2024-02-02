@@ -285,9 +285,22 @@ def vehicle_details(request):
         username = request.session['username']
         print(username)
         vehicleType = request.POST['vehicleType']
+        issuetype = request.POST['issueType']
         vehicleNumber = request.POST['vehicleNumber']
         issueDescription = request.POST['issueDescription']
-        print(vehicleType)
+        
+        Major_issues =  ['Break Failure','Engine Overheating','Fluid Leaks','Smoke or Burning Smells']
+        Minor_issues = ['Strange Noises','Fuel System Problems','Tire Issues']
+        low_priority = ['Maintenance Reminders','Accessory Malfunctions']
+        for i in Major_issues:
+            if i == issuetype:
+                issuetype= 'major'
+        for i in Minor_issues:
+            if i == issuetype:
+                issuetype= 'minor'
+        for i in low_priority:
+            if i == issuetype:
+                issuetype= 'low'
         mobileNumber = request.POST['mobileNumber']
         issueId = random.randint(1, 1000)
         undata = UsersCurrentAddress.objects.get(username = username)
@@ -309,6 +322,7 @@ def vehicle_details(request):
             undata.issuedesc = issueDescription
             undata.vehicleNo = vehicleNumber
             undata.vehicleType = vehicleType
+            undata.issuetype = issuetype
             print("except called")
             undata.save()
         username = (request.session['username'])
@@ -410,7 +424,7 @@ def waiting_page(request):
                    'duration_seconds':duration_seconds,
                    })
 
-from .forms import FeedbackForm
+# from .forms import FeedbackForm
 def feedback(request):
     if request.method == 'POST':
         cust_username = request.session['username']

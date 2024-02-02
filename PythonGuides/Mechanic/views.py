@@ -86,6 +86,61 @@ def mech_login(request):
     
     return render(request,'Mechanic/login_final.html')
 
+def mech_forgot_password(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        p1 = request.POST.get('p1', '')
+        p2 = request.POST.get('p2', '')
+        if(p1 == p2):
+            request.session['username'] = username
+            request.session['newp'] = p1
+            return redirect ('otp_forgot_passwd')
+    return render(request, 'Mechanic/forgot_password.html')  
+
+import random
+from django.core.mail import send_mail
+from PythonGuides.settings import EMAIL_HOST_USER
+ 
+global num
+num = 0
+def mech_otp_forgot_passwd(request):
+    global num
+    if request.method == 'POST':
+        otp1 = request.POST.get('otp1')
+        otp2 = request.POST.get('otp2')
+        otp3 = request.POST.get('otp3')
+        otp4 = request.POST.get('otp4')
+
+        entered_otp = f"{otp1}{otp2}{otp3}{otp4}"
+        if (int(entered_otp) == int(num)):
+            dat = UsersMechanic.objects.get(username = request.session['username'])
+            encryptpass= encrypt(request.session['newp'])
+            dat.password = encryptpass
+            dat.save()
+            
+            return redirect('login')
+        else:
+            
+            return HttpResponse('invalid Otp')
+    else:
+        mail = UsersMechanic.objects.get(username = request.session['username'])
+        num = random.randrange(1000,9999)
+        subject = ''' Hello,
+ 
+{} is your one-time passcode (OTP) for the ResQify app.
+ 
+Use this OTP to reset your password.
+ 
+The code was requested from the ResQify's App on google your device.It will be valid for 4 hours.
+ 
+ 
+Enjoy the app!
+ 
+ResQify's team'''
+        send_mail('Your One Time Passcode for ResQify',subject.format(num),EMAIL_HOST_USER,[mail.email],fail_silently=True)
+        return  render(request,"Mechanic/forgot_password_otp.html")
+
+
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 @csrf_exempt
@@ -143,11 +198,11 @@ def get_vehicle_data(request):
     mech_address = MechanicDetails.objects.get(username = username)
 
     from_adress_string = str(mech_address.mech_shop)+", "+str(mech_address.mech_Address)+", "+str(mech_address.mech_city)+", "+str(mech_address.mech_zipcode)
-    user_address = UsersCurrentAddress.objects.all()
+    major = UsersCurrentAddress.objects.filter(issuetype = 'major')
     now = datetime.now()
     data = []
     i =0 
-    for address in user_address:
+    for address in major:
         gmaps = googlemaps.Client(key=settings.GOOGLE_API_KEY)
         result = gmaps.reverse_geocode((address.lat, address.lng))
         add = result[0]['formatted_address']
@@ -161,23 +216,23 @@ def get_vehicle_data(request):
                     departure_time = now
             )
         duration_seconds = calculate['rows'][0]['elements'][0]['duration']['value']
-        duration_minutes = duration_seconds/60
+        duration_minutes = round(duration_seconds/60, 2)
 
         distance_meters = calculate['rows'][0]['elements'][0]['distance']['value']
         distance_kilometers = distance_meters/1000
         
         var = {
                 'username': address.username,
-                'issue_description': 'the vehicle is not starting',
-                'contact': '2343143',
+                'issue_description': address.issuedesc,
+                'contact':  address.phone,
                 'distance': distance_kilometers,
                 'time':duration_minutes
             }
         data.append(var)
-        print(var)
+        print(var)    
         i += 1 
         if (i == 5):
-            exit
+            break
     print(data)
         
 
