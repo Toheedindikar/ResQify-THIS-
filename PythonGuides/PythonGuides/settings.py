@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from django.core.mail import send_mail
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','34.227.105.171:8001']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -34,8 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-xewhry7ry0*+1^w05%l^!bbtiwitpe80w0-b^w4$^vkc-20&a("
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = False
 GOOGLE_API_KEY = 'AIzaSyAbqSUWRSga4wxQFfaiteZBsi-0hUi87as'
 
 
