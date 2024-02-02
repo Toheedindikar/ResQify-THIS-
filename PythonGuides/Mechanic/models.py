@@ -42,4 +42,22 @@ class Booking_status(models.Model):
     class Meta:
         db_table="Booking_status"
 
+class Profile_mechanic(models.Model):
+    phone = models.CharField(max_length=1000,blank=True, null=True)
+    no_of_bookings = models.CharField(max_length=5000,blank=True, null=True)
+    rating = models.CharField(max_length=200,blank=True, null=True)
+    mech_name = models.CharField(max_length=500,blank=True, null=True)
+    mech_username = models.CharField(max_length=500,blank=True, null=True)
+    class Meta:
+        db_table="Profile_mechanic"
+
+# class central_status_manager(models.Model):
+#     cust_username = models.CharField(max_length=500,blank=True, null=True)
+#     mech_username = models.CharField(max_length=500,blank=True, null=True)
+#     issueid = models.CharField(max_length=1000,blank=True, null=True)
+#     mech_assigned = models.CharField(max_length=50,blank=True, null=True)
+#     issue_resolved_status  = models.CharField(max_length=50,blank=True, null=True)
+#     class Meta:
+#         db_table="Booking_status"
+
 

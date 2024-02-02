@@ -28,7 +28,7 @@ def signup_mech(request):
                     data = UsersMechanic(name=name,username=username,email=email,mobile=phone,password= encryptpass)
                     data.save()
                     form = mech_detailsModelForm()
-                    profile = Profile(mech_username=username,mech_name = name)
+                    profile = Profile_mechanic(mech_username=username,mech_name = name)
                     profile.no_of_bookings = 0
                     profile.save()
                     return redirect('mech_details')
@@ -198,7 +198,7 @@ def get_vehicle_data(request):
     mech_address = MechanicDetails.objects.get(username = username)
 
     from_adress_string = str(mech_address.mech_shop)+", "+str(mech_address.mech_Address)+", "+str(mech_address.mech_city)+", "+str(mech_address.mech_zipcode)
-    major = UsersCurrentAddress.objects.filter(issuetype = 'major')
+    major = UsersCurrentAddress.objects.filter(issuetype = 'major',issue_status_id= '0')
     now = datetime.now()
     data = []
     i =0 
@@ -222,7 +222,7 @@ def get_vehicle_data(request):
         distance_kilometers = distance_meters/1000
         
         var = {
-                'username': address.username,
+                'username': address.username, 
                 'issue_description': address.issuedesc,
                 'contact':  address.phone,
                 'distance': distance_kilometers,
@@ -353,8 +353,8 @@ def display_info(request,username):
     status.cust_name = username.name
     status.mech_name = mech_name.name
     status.mech_username = request.session['username']
-    status.mech_assigned = 1
-    status.issue_resolved_status = 0
+    status.mech_assigned = '1'
+    status.issue_resolved_status = '0'
     status.cust_lat = cust_lat
     status.cust_lng = cust_lng
     status.mech_lat = mech_lat
@@ -366,7 +366,7 @@ def display_info(request,username):
     status.save()
     book = Bookings(cust_username = cust_username, mech_name= mech_name, booking_date =formatted_datetime, booking_time = time, issue_desc = add.issuedesc )
     book.save()
-    profile = Profile.objects.get(mech_username = mech_username )
+    profile = Profile_mechanic.objects.get(mech_username = mech_username )
     val = int(profile.no_of_bookings)
     val +=1
     profile.save()
@@ -401,7 +401,7 @@ def mech_profile(request):
     data = UsersMechanic.objects.get(username = request.session['username'] )
     mech_name = data.name
 
-    profile = Profile.objects.get(mech_username = request.session['username'] )
+    profile = Profile_mechanic.objects.get(mech_username = request.session['username'] )
     no_of_bookings = profile.no_of_bookings
     rating = profile.rating
     phone = UsersMechanic.objects.get(username = request.session['username'] )
@@ -426,17 +426,23 @@ def mech_feedback(request):
 
 def mech_resolved(request):
     if request.method == 'POST':
-        status = Booking_status.objects.filter(mech_username = request.session['username'] )
+        status = Booking_status.objects.get(mech_username = request.session['username'] )
         print(status)
-        status.issue_resolved_status = 1
+        status.issue_resolved_status = '1'
+        ustatus = UsersCurrentAddress.objects.get(username = status.cust_username)
+        ustatus.issue_status_id = '1'
         status.save()
+        ustatus.save()
     return  redirect('home_page')
 
 def mech_unresolved(request):
     if request.method == 'POST':
         status = Booking_status.objects.get(mech_username = request.session['username'] )
-        status.issue_resolved_status = 0
+        status.issue_resolved_status = '0'
+        ustatus = UsersCurrentAddress.objects.get(username = status.cust_username)
+        ustatus.issue_status_id = '0'
         status.save()
+        ustatus.save()
     return  redirect('home_page')
 
 def mech_bookings(request):

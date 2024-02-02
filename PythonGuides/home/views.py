@@ -305,8 +305,9 @@ def vehicle_details(request):
         issueId = random.randint(1, 1000)
         undata = UsersCurrentAddress.objects.get(username = username)
         status = Booking_status.objects.get(cust_username= username)
-        status.issue_resolved_status = 0
-        status.mech_assigned = 0
+        status.issue_resolved_status = '0'
+        status.mech_assigned = '0'
+        status.save()
         try :
             update = BookMechanic.objects.get(username = username)
             update.issueid = issueId
@@ -323,6 +324,7 @@ def vehicle_details(request):
             undata.vehicleNo = vehicleNumber
             undata.vehicleType = vehicleType
             undata.issuetype = issuetype
+            undata.issue_status_id = '0' # 0 for not booked 1 for booked 
             print("except called")
             undata.save()
         username = (request.session['username'])
@@ -399,7 +401,7 @@ def waiting_page(request):
     cust_lng = status.cust_lng
     mech_lat = status.mech_lat
     mech_lng = status.mech_lng
-    duration_seconds = status.duration_seconds
+    duration_seconds = status.duration_seconds 
     key = settings.GOOGLE_API_KEY
     duration_kilometers = status.duration_kilometers
     mech = UsersMechanic.objects.get(username= mech_username)

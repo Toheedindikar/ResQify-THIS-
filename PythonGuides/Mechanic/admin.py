@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(UsersMechanic)
 admin.site.register(MechanicDetails)
 admin.site.register(Booking_status)
+admin.site.register(Profile_mechanic)
