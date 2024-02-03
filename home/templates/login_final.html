@@ -1,0 +1,127 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'login_final.css' %}">
+</head>
+<body>
+
+    <br>
+<br>
+    <div class="cont">
+        <div class="form sign-in">
+            <h2>Welcome</h2>
+            <form method="post" action="{% url 'login' %}" id="loginForm">
+                {% csrf_token %}
+
+            <label>
+                <span>UserName</span>
+                <input type="text" name="username" />
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="password"/>
+            </label>
+            <p class="forgot-pass"><a href="{% url 'forgot_password' %}" style="text-decoration: none;"><b>Forgot password?</b></a></p>
+            <button  class="submit" >LogIn</button>
+         </form>
+        
+        </div>
+       
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+                 
+                    <h3>Don't have an account? Please Sign up!<h3>
+                </div>
+                <div class="img__text m--in">
+                
+                    <h3>If you already has an account, just sign in.<h3>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">SignUp</span>
+                    <span class="m--in">LogIn</span>
+                </div>
+            </div>
+            
+            <div >
+                <form method="post" action="{% url 'signup' %}">
+                    {% csrf_token %}
+                <h2>Create your Account</h2>
+                <label>
+                    <span>Name</span>
+                    <input type="text" name="name" />
+                </label>
+                <label>
+                    <span>User Name</span>
+                    <input type="text" name="username" />
+                </label>
+                <label>
+                    <span>Mobile Number</span>
+                    <input type="tel" name="phone" />
+                </label>
+                
+    
+                <label>
+                    <span>Email</span>
+                    <input type="email" name="email" />
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" name="pass1"/>
+                </label>
+                <label>
+                    <span>Confirm Password</span>
+                    <input type="password" name="pass2"/>
+                </label>
+                <button  class="submit">SignUp</button>
+            </form>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <script>
+        document.querySelector('.img__btn').addEventListener('click', function() {
+            document.querySelector('.cont').classList.toggle('s--signup');
+        });
+        
+    </script>
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', function (event) {
+                    event.preventDefault();
+
+                    fetch(this.action, {
+                        method: this.method,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': this.elements['csrfmiddlewaretoken'].value,
+                        },
+                        body: new URLSearchParams(new FormData(this)),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);  // Display error message as a pop-up
+                        } else {
+                            window.location.href = "{% url 'accept_rules' %}";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            </script>
+    
+</body>
+</html>

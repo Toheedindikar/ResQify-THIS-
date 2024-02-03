@@ -1,0 +1,36 @@
+#logo {
+    height: 50px;
+    width: 50px;
+    background-image: url(/IMAGES/mech1.jpg);
+    background-size: cover;
+    border-radius: 100px;
+}
+
+.navbar-brand {
+    margin-left: 10px;
+}
+
+.container {
+    max-width: 500px; /* Set a max-width for better responsiveness */
+    margin: 50px auto; /* Center the container */
+    text-align: center;
+    padding: 20px;
+    background-color: #cfcbcb;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+select {
+    font-size: 16px;
+    padding: 8px;
+}
+
+.secondDropdown {
+    display: none;
+    margin-top: 15px;
+}
