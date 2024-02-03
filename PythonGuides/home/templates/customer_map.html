@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<script> 
+    let map
+
+    function initMap(){
+
+        var locations = {{ locations|safe }};
+        var firstLocation = locations[0]
+        var infoWindow = []
+
+        map = new google.maps.Map(document.getElementById("map"),{
+            center: { lat: firstLocation.lat, lng: firstLocation.lng }, 
+            zoom: 4,
+        }
+        );
+
+        locations.forEach(function (location){
+            var marker = new google.maps.Marker({
+                position: {lat: location.lat, lng: location.lng}, 
+                map: map, 
+                title: location.name
+            });
+
+            var infowindow = new google.maps.InfoWindow({
+                content: location.name, 
+            });
+
+            infoWindow.push(infowindow)
+
+            marker.addListener('click', function(){
+                infoWindow.forEach(function(iw){
+                    iw.close();
+                });
+
+                infowindow.open(map, marker)
+            });
+        });
+    }
+
+    window.initMap = initMap
+
+</script>
+
+<div class="pageholder">
+    <h2>Welcome, {{ request.session.name }}!</h2>
+
+
+    <div class="linkholder">
+        <div class="mapholder"> 
+            <div id="map"> </div>
+
+            <script async
+                src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap">
+            </script>
+
+        </div>
+        
+     </div>
+
+
+    <div class="linkholder">  
+        <form method="post" action="{% url 'BookMechanic' %}">
+            {% csrf_token %}
+            <h2>Book a mechanic</h2>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+               
+                <input type="text box" class="form-control" id="editableInput" name ="Address"value="{{ address|safe }}" oninput="updateEditableText(value)">
+                
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" name="City" placeholder="Enter your city" required>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">ZipCode</label>
+                <input type="text" class="form-control" name="ZipCode" placeholder="Enter your ZipCode" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+    </div>
+
+
+
+</div>
+<script>
+      function updateEditableText(value) {
+        // You can add additional logic here if needed
+
+        console.log("Current text: " + {{ locations|safe }});
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,303 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            margin: 0;
+            padding: 0;
+            animation: pulse 100s infinite;
+            background-color: #87aaf7;
+        }
+
+        #logo {
+            height: 50px;
+            width: 50px;
+            background-image: url(/IMAGES/mech1.jpg);
+            background-size: cover;
+            border-radius: 100px;
+        }
+
+        .navbar-brand {
+            margin-left: 10px;
+        }
+
+        #google-map {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #google-map {
+                margin-top: 10px;
+            }
+
+            .submit {
+                margin: 10px auto;
+                /* Center the button on small screens */
+            }
+        }
+
+        #timer {
+            font-size: 30px;
+        }
+
+        .submit {
+            height: 50px;
+            width: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+            /* Add margin for spacing */
+            background-color: black;
+            color: aliceblue;
+            font-size: 20px;
+            border-radius: 20px;
+        }
+
+        .container {
+            position: relative;
+            width: 50%;
+            margin: 280px auto;
+            padding: 20px 40px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
+        }
+
+        .Loading {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background: #f1f1f1;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .Loading:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 0;
+            height: 100%;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+            animation: load 10s infinite;
+        }
+
+        @keyframes load {
+            0% {
+                width: 0;
+                background: rgb(157, 233, 59);
+            }
+
+            25% {
+                width: 40%;
+                background: #23f52d;
+            }
+
+            50% {
+                width: 60%;
+                background: #e4f82e;
+            }
+
+            75% {
+                width: 75%;
+                background: #fa9c32;
+            }
+
+            100% {
+                width: 100%;
+                background: #e60b0bf1;
+            }
+        }
+
+        @keyframes pulse {
+            /* 0% {
+                background: #a28089;
+            } */
+
+            100% {
+                background: #a0d2eb;
+            }
+
+            /* 50% {
+                background: #ffa8b6;
+            }
+
+            75% {
+                background: #d0bdf4;
+            }
+
+            100% {
+                background: #494d5f;
+            } */
+        }
+    </style>
+</head>
+
+<body>
+  <div id="map" style="height: 450px;">
+    <script async
+    src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap">
+</script>
+  </div>
+    <div >
+        <div class="Loading"></div>
+    </div>
+
+    
+        <section>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                <div class="container-fluid">
+                    <div id="logo"></div>
+                    <a class="navbar-brand" href="#" style="font-size: 30px; color: aqua;">ResQify</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link" href="{% url 'waiting_page' %}">Bookings</a>
+                            </li> -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Bookings
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{% url 'waiting_page' %}">Ongoing</a>
+                                    <a class="dropdown-item" href="{% url 'Booking_histroy' %}">Completed</a>
+                                    
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout_cust' %}">LogOut <i class="fa-solid fa-arrow-right-from-bracket"
+                                        style="margin-left: 10px;"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </section>
+
+       
+        
+
+        <!-- Map Section -->
+        
+       
+        
+    
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<center>
+ 
+  <p id="demo"><font size="6">
+    Finding a Mechanic....
+</font></p>
+</center>
+
+
+    
+</body>
+  
+<script> 
+    
+  let map
+
+
+  function initMap(){
+
+      var locations = {{ locations|safe }};
+      var firstLocation = locations[0]
+      var infoWindow = []
+
+      map = new google.maps.Map(document.getElementById("map"),{
+          center: { lat: firstLocation.lat, lng: firstLocation.lng }, 
+          zoom: 4,
+      }
+      );
+
+      locations.forEach(function (location){
+          var marker = new google.maps.Marker({
+              position: {lat: location.lat, lng: location.lng}, 
+              map: map, 
+              title: location.name
+          });
+
+          var infowindow = new google.maps.InfoWindow({
+              content: location.name, 
+          });
+
+          infoWindow.push(infowindow)
+
+          marker.addListener('click', function(){
+              infoWindow.forEach(function(iw){
+                  iw.close();
+              });
+
+              infowindow.open(map, marker)
+          });
+      });
+  }
+
+  window.initMap = initMap
+
+</script>
+<script>
+  // Use Fetch API to make a GET request to the Django backend
+  function checkForMechanic(){
+    fetch('http://127.0.0.1:8000/check_mechanic')
+      .then(response => response.json())
+      .then(data => {
+          // Update HTML content dynamically
+          if (data.status === 'found'){
+            let url = `/waiting_page`;
+            const dynamicContentElement = document.getElementById('demo');
+            dynamicContentElement.innerHTML = `<p>${data.status}</p>`;
+            dynamicContentElement.innerHTML = `<a href="${url}"><font size="6">
+              Mechanic Found
+          </font></a>`;
+            
+            
+          }
+          else {
+            // Mechanic not found, continue checking
+            setTimeout(checkForMechanic, 1000);
+            const dynamicContentElement = document.getElementById('dynamicContent');
+            dynamicContentElement.innerHTML = `<p>Mechanic not found</p>`;
+        }
+
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  checkForMechanic();
+  
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+crossorigin="anonymous"></script>
+</html>
