@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from django.core.mail import send_mail
 
-ALLOWED_HOSTS = ['*','34.227.105.171']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -38,7 +37,7 @@ DEBUG = False
 GOOGLE_API_KEY = 'AIzaSyAbqSUWRSga4wxQFfaiteZBsi-0hUi87as'
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 DIRS = ['Templates']
 # Application definition
