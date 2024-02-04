@@ -112,7 +112,7 @@
         </div>
         
         <div class="form-content">
-            <form id="otpVerificationForm" method="post" action="{% url 'otp' %}">
+            <form id="otpVerificationForm" method="post" action="{% url 'otp_forgot_passwd' %}">
                 {% csrf_token %}
                 <label for="otp"><b>Enter OTP:</b></label>
                 <div style="display: flex;">

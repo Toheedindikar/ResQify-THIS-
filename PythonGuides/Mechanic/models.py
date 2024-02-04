@@ -8,6 +8,7 @@ class UsersMechanic(models.Model):
     username = models.CharField(max_length=100)
     mobile = models.CharField(max_length=100)
     email = models.EmailField(max_length = 254)
+    mech_email_verified = models.CharField(max_length=200,blank=True, null=True)
     password = models.CharField(max_length=50)
     class Meta:
         db_table="UsersMechanic"
