@@ -159,7 +159,7 @@ def login(request):
         # if (verify == username):
         #     print(username)
         
-    return render(request,"loginSignUp.html")
+    return render(request,"loginSignup.html")
 
 def logout_cust(request):
     if 'cust_username' in request.session:
