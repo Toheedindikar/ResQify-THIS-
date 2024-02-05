@@ -478,6 +478,10 @@ def feedback(request):
         issue = UsersCurrentAddress.objects.get(username = cust_username)
         booking.issue_desc = issue.issuedesc
         booking.save()   
+        no_of_bookings = Profile.objects.get(cust_username = cust_username)
+        b = int(profile.no_of_bookings)
+        b += 1
+        no_of_bookings.save()
         profile = Profile_mechanic.objects.get(mech_username = status.mech_username )
         profile.rating = 4
 
